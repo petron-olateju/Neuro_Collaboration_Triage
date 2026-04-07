@@ -25,3 +25,17 @@ training:
     train_dir: data/train
     valid_dir: data/valid
     test_dir: data/test
+
+preprocessing:
+  data_root: eeg_data/Data/NMT_Events  # EDF and CSV data root
+  output_root: data                     # Output directory for generated images
+  mode: three_class                    # "three_class" | "binary"
+  window_duration: 2.0               # Window duration in seconds
+  window_overlap: 0.5                # Overlap ratio (0.5 = 50%)
+  min_windows_per_subject: 2           # Minimum windows to keep subject
+  cwt_freq_min: 1                    # Minimum CWT frequency (Hz)
+  cwt_freq_max: 30                   # Maximum CWT frequency (Hz)
+  cwt_n_freqs: 30                    # Number of frequency bins
+  img_width: 224                     # Image width
+  img_height: 224                   # Image height
+  normal_edf_duration: 600          # Default duration for normal EDF files (seconds)

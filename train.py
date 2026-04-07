@@ -11,6 +11,7 @@ Usage:
     python train.py
     python train.py --config configs/training.yaml
     python train.py --mode binary --model googlenet --epochs 20
+    python train.py --preprocess           # Generate dataset from EDF/CSV
 """
 
 from __future__ import annotations
@@ -35,6 +36,7 @@ from utils import (
     VGG16,
     EfficientNetB1,
 )
+from utils.mne_dataset import prepare_dataset
 
 
 LABEL_CLASSES_3 = ["Normal", "Slowing Waves", "Spike and Sharp waves"]
@@ -313,6 +315,8 @@ def save_checkpoint(
     checkpoint_dir: Path,
     model_name: str,
     mode: str,
+    dataset_name: str = "",
+    test_id: int = 0,
     is_best: bool = False,
 ) -> Path:
     """Save model checkpoint.
@@ -323,6 +327,8 @@ def save_checkpoint(
         checkpoint_dir: Directory to save checkpoints.
         model_name    : Name of the model architecture.
         mode          : Training mode ("three_class" or "binary").
+        dataset_name  : Name of the dataset (e.g., "nmt").
+        test_id       : ID of test subject for best model naming.
         is_best       : Whether this is the best model so far.
 
     Returns:
@@ -331,7 +337,8 @@ def save_checkpoint(
     checkpoint_dir = Path(checkpoint_dir)
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
-    filename = f"{model_name}_{mode}_e{epoch}.pt"
+    prefix = f"{dataset_name}_" if dataset_name else ""
+    filename = f"{prefix}{model_name}_{mode}_e{epoch}.pt"
     filepath = checkpoint_dir / filename
 
     torch.save(
@@ -344,12 +351,14 @@ def save_checkpoint(
             "val_acc": val_acc,
             "model_name": model_name,
             "mode": mode,
+            "dataset_name": dataset_name,
         },
         filepath,
     )
 
     if is_best:
-        best_path = checkpoint_dir / f"{model_name}_{mode}_best.pt"
+        best_filename = f"{prefix}{model_name}_{mode}_{test_id}.pt"
+        best_path = checkpoint_dir / best_filename
         torch.save(
             {
                 "epoch": epoch,
@@ -360,6 +369,7 @@ def save_checkpoint(
                 "val_acc": val_acc,
                 "model_name": model_name,
                 "mode": mode,
+                "dataset_name": dataset_name,
             },
             best_path,
         )
@@ -367,7 +377,9 @@ def save_checkpoint(
     return filepath
 
 
-def main(config_path: str = "configs/training.yaml") -> None:
+def main(
+    config_path: str = "configs/training.yaml", dataset_name: str = "", test_id: int = 0
+) -> None:
     """Main training function."""
     config = load_config(config_path)
     training = config["training"]
@@ -385,9 +397,12 @@ def main(config_path: str = "configs/training.yaml") -> None:
     min_delta = early_stopping.get("min_delta", 0.001)
 
     data_config = training.get("data", {})
-    train_dir = data_config.get("train_dir", "data/train")
-    valid_dir = data_config.get("valid_dir", "data/valid")
-    test_dir = data_config.get("test_dir", "data/test")
+    if dataset_name:
+        train_dir = f"data/{dataset_name}/train"
+        valid_dir = f"data/{dataset_name}/valid"
+    else:
+        train_dir = data_config.get("train_dir", "data/train")
+        valid_dir = data_config.get("valid_dir", "data/valid")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
@@ -448,6 +463,8 @@ def main(config_path: str = "configs/training.yaml") -> None:
             checkpoint_dir,
             model_name,
             mode,
+            dataset_name=dataset_name,
+            test_id=test_id,
             is_best=is_best,
         )
 
@@ -464,7 +481,12 @@ def main(config_path: str = "configs/training.yaml") -> None:
             break
 
     print(f"\nTraining complete. Checkpoints saved to: {checkpoint_dir}")
-    print(f"Best model: {checkpoint_dir}/{model_name}_{mode}_best.pt")
+    prefix = f"{dataset_name}_" if dataset_name else ""
+    print(
+        f"Best model: {checkpoint_dir}/{prefix}{model_name}_{mode}_{test_id}.pt"
+        if test_id
+        else f"Best model: {checkpoint_dir}/{prefix}{model_name}_{mode}_best.pt"
+    )
 
 
 if __name__ == "__main__":
@@ -494,11 +516,107 @@ if __name__ == "__main__":
         type=int,
         help="Override number of epochs from config",
     )
+    parser.add_argument(
+        "--preprocess",
+        action="store_true",
+        help="Generate dataset from EDF/CSV files",
+    )
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        help="Dataset name from dataset_config.yaml (e.g., nmt, tuab)",
+    )
 
     args = parser.parse_args()
 
-    if args.mode or args.model or args.epochs:
-        import copy
+    if args.preprocess:
+        config = load_config(args.config)
+
+        dataset_config_path = "configs/dataset_config.yaml"
+        if not Path(dataset_config_path).exists():
+            raise FileNotFoundError(f"Dataset config not found: {dataset_config_path}")
+
+        with open(dataset_config_path, "r") as f:
+            dataset_config = yaml.safe_load(f)
+
+        datasets = dataset_config.get("datasets", {})
+        if not datasets:
+            raise ValueError("No datasets defined in dataset_config.yaml")
+
+        prep_config = config.get("preprocessing", {})
+        print("Generating dataset from EDF/CSV files...")
+
+        for dataset_name, dataset_info in datasets.items():
+            data_root = dataset_info.get("path")
+            if not data_root:
+                print(f"Warning: No path for dataset {dataset_name}, skipping")
+                continue
+
+            train_ids = dataset_info.get("train_subject_ids")
+            valid_ids = dataset_info.get("valid_subject_ids")
+            test_ids = dataset_info.get("test_subject_ids")
+
+            if not train_ids or not valid_ids or not test_ids:
+                print(
+                    f"Warning: Missing split IDs for dataset {dataset_name}, skipping"
+                )
+                continue
+
+            output_root = f"data/{dataset_name}"
+            print(f"Processing dataset: {dataset_name}")
+            print(f"  Data root: {data_root}")
+            print(f"  Output root: {output_root}")
+            print(
+                f"  Train: {len(train_ids)} subjects, Valid: {len(valid_ids)} subjects, Test: {len(test_ids)} subjects"
+            )
+
+            prepare_dataset(
+                data_root=data_root,
+                output_root=output_root,
+                mode=prep_config.get("mode", "three_class"),
+                window_duration=prep_config.get("window_duration", 2.0),
+                window_overlap=prep_config.get("window_overlap", 0.5),
+                min_windows_per_subject=prep_config.get("min_windows_per_subject", 2),
+                cwt_freqs=(
+                    prep_config.get("cwt_freq_min", 1),
+                    prep_config.get("cwt_freq_max", 30),
+                    prep_config.get("cwt_n_freqs", 30),
+                ),
+                img_size=(
+                    prep_config.get("img_width", 224),
+                    prep_config.get("img_height", 224),
+                ),
+                total_duration=prep_config.get("normal_edf_duration", 600),
+                train_ids=train_ids,
+                valid_ids=valid_ids,
+                test_ids=test_ids,
+            )
+            print(f"  Dataset {dataset_name} complete!")
+        print("Dataset generation complete!")
+    elif args.dataset:
+        dataset_config_path = "configs/dataset_config.yaml"
+        if not Path(dataset_config_path).exists():
+            raise FileNotFoundError(f"Dataset config not found: {dataset_config_path}")
+
+        with open(dataset_config_path, "r") as f:
+            dataset_config = yaml.safe_load(f)
+
+        datasets = dataset_config.get("datasets", {})
+        if args.dataset not in datasets:
+            raise ValueError(
+                f"Dataset '{args.dataset}' not found in dataset_config.yaml"
+            )
+
+        dataset_info = datasets[args.dataset]
+        train_ids = dataset_info.get("train_subject_ids")
+        valid_ids = dataset_info.get("valid_subject_ids")
+        test_ids = dataset_info.get("test_subject_ids")
+
+        if not train_ids or not valid_ids or not test_ids:
+            raise ValueError(f"Missing split IDs for dataset {args.dataset}")
+
+        dataset_name = args.dataset
+        test_id = test_ids[0] if test_ids else 0
 
         config = load_config(args.config)
         if args.mode:
@@ -509,95 +627,9 @@ if __name__ == "__main__":
         if args.epochs:
             config["training"]["epochs"] = args.epochs
 
-        training = config["training"]
-        mode = training.get("mode", "three_class")
-        model_name = training.get("model", "vgg16")
-        num_classes = training.get("num_classes", 3 if mode == "three_class" else 2)
-        learning_rate = training.get("learning_rate", 0.0001)
-        epochs = training.get("epochs", 30)
-        batch_size = training.get("batch_size", 32)
-        checkpoint_dir = training.get("checkpoint_dir", "checkpoints")
-        early_stopping = training.get("early_stopping", {})
-        patience = early_stopping.get("patience", 5)
-        min_delta = early_stopping.get("min_delta", 0.001)
-        data_config = training.get("data", {})
-        train_dir = data_config.get("train_dir", "data/train")
-        valid_dir = data_config.get("valid_dir", "data/valid")
+        with open(args.config, "w") as f:
+            yaml.dump(config, f)
 
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        print(f"Using device: {device}")
-        print(f"Mode: {mode}, Classes: {num_classes}, Model: {model_name}")
-
-        transforms_dict = get_default_transforms()
-        train_dataset = EEGCWTDataset(
-            train_dir, mode=mode, transform=transforms_dict["train"]
-        )
-        valid_dataset = EEGCWTDataset(
-            valid_dir, mode=mode, transform=transforms_dict["valid"]
-        )
-
-        print(
-            f"Train samples: {len(train_dataset)}, Valid samples: {len(valid_dataset)}"
-        )
-
-        train_loader = DataLoader(
-            train_dataset, batch_size=batch_size, shuffle=True, num_workers=4
-        )
-        valid_loader = DataLoader(
-            valid_dataset, batch_size=batch_size, shuffle=False, num_workers=4
-        )
-
-        model = create_model(model_name, num_classes=num_classes).to(device)
-        print(f"Model parameters: {sum(p.numel() for p in model.parameters()):,}")
-
-        class_weights = compute_class_weights(train_loader, num_classes).to(device)
-        criterion = nn.CrossEntropyLoss(weight=class_weights)
-        optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-
-        best_val_loss = float("inf")
-        epochs_no_improve = 0
-
-        for epoch in range(1, epochs + 1):
-            start_time = time.time()
-            train_loss, train_acc = train_one_epoch(
-                model, train_loader, criterion, optimizer, device
-            )
-            val_loss, val_acc = validate(model, valid_loader, criterion, device)
-            epoch_time = time.time() - start_time
-
-            is_best = val_loss < best_val_loss - min_delta
-            if is_best:
-                best_val_loss = val_loss
-                epochs_no_improve = 0
-            else:
-                epochs_no_improve += 1
-
-            checkpoint_path = save_checkpoint(
-                model,
-                epoch,
-                train_loss,
-                train_acc,
-                val_loss,
-                val_acc,
-                checkpoint_dir,
-                model_name,
-                mode,
-                is_best=is_best,
-            )
-
-            print(
-                f"Epoch {epoch}/{epochs} | "
-                f"Train Loss: {train_loss:.4f}, Acc: {train_acc:.2f}% | "
-                f"Val Loss: {val_loss:.4f}, Acc: {val_acc:.2f}% | "
-                f"Time: {epoch_time:.1f}s | "
-                f"{'BEST' if is_best else ''}"
-            )
-
-            if epochs_no_improve >= patience:
-                print(f"Early stopping triggered after {epoch} epochs")
-                break
-
-        print(f"\nTraining complete. Checkpoints saved to: {checkpoint_dir}")
-        print(f"Best model: {checkpoint_dir}/{model_name}_{mode}_best.pt")
-    else:
+        main(args.config, dataset_name=dataset_name, test_id=test_id)
+    elif args.mode or args.model or args.epochs:
         main(args.config)
