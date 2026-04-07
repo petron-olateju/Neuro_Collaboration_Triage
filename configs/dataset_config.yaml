@@ -21,7 +21,7 @@ datasets:
 
   nmt:
     braindecode_class: NMT                # maps to braindecode.datasets.NMT
-    path: /path/to/nmt_dataset            # root folder of the downloaded dataset
+    path: /teamspace/studios/this_studio/Neuro_Collaboration_Triage/eeg_data/Data/NMT_Events           # root folder of the downloaded dataset
     target_name: pathological             # "pathological" | "gender" | "age"
     preload: false                        # true = load all into RAM
     recording_ids: null                   # null = all; or e.g. [0, 1, 2, 3, 4]
