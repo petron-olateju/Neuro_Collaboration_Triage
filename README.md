@@ -19,6 +19,7 @@ A PyTorch-based deep learning pipeline for EEG anomaly classification using CWT 
 8. [Usage](#usage)
 9. [Models](#models)
 10. [End-to-End Workflow](#end-to-end-workflow)
+11. [Collaboration Analysis](#collaboration-analysis)
 
 ---
 
@@ -146,6 +147,8 @@ EEG_Anomaly_Triage/
 │       │   └── Spike and Sharp waves/
 │       ├── valid/
 │       └── test/
+├── experiments/              # Collaboration analysis results
+│   └── experiment.yaml      # All experiment runs (timestamp-keyed)
 └── artifacts/
     └── source_code_files/   # Original Jupyter notebooks (reference)
 ```
@@ -571,6 +574,27 @@ with torch.no_grad():
     predictions = output.argmax(dim=1)
 ```
 
+### Run Collaboration Analysis
+
+Evaluate Human-AI collaboration strategies on trained models:
+
+```bash
+# Default settings
+python test_and_collab.py
+
+# Custom settings
+python test_and_collab.py --dataset nmt --confidence-threshold 0.9 --cost-alpha 0.1
+```
+
+**Available options:**
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--dataset` | Dataset name | `nmt` |
+| `--confidence-threshold` | Strategy A: defer if confidence below this | `0.85` |
+| `--cost-alpha` | Strategy B: defer if P(pathology) > this | `0.15` |
+
+Results are saved to `experiments/experiment.yaml` with timestamp keys.
+
 ---
 
 ## Models
@@ -676,6 +700,76 @@ Output: (B, num_classes)
 │     predictions = output.argmax(dim=1)                                       │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Collaboration Analysis
+
+Script: `test_and_collab.py`
+
+Evaluates Human-AI collaboration strategies for clinical decision support.
+
+### Collaboration Strategies
+
+| Strategy | Description |
+|----------|-------------|
+| **Baseline (AI Alone)** | Standard model predictions without collaboration |
+| **Strategy A** (Confidence-based) | If confidence < threshold, defer to human |
+| **Strategy B** (Cost-aware) | If P(Pathology) > α, defer to human |
+
+### Usage
+
+```bash
+# Default settings
+python test_and_collab.py
+
+# Custom settings
+python test_and_collab.py --dataset nmt --confidence-threshold 0.9 --cost-alpha 0.1
+```
+
+### Output
+
+Results saved to `experiments/experiment.yaml` with timestamp keys:
+
+```yaml
+runs:
+  "2026-04-08_14-30-00":
+    model:
+      name: vgg16
+      dataset: nmt
+      mode: binary
+      num_classes: 2
+    collaboration:
+      strategy_a:
+        confidence_threshold: 0.85
+      strategy_b:
+        cost_alpha: 0.15
+    results:
+      baseline:
+        accuracy: 0.85
+        precision: 0.83
+        recall: 0.87
+        f1: 0.85
+      strategy_a:
+        accuracy: 0.89
+        precision: 0.88
+        recall: 0.92
+        f1: 0.90
+        escalation_rate: 15.0
+      strategy_b:
+        accuracy: 0.91
+        precision: 0.90
+        recall: 0.95
+        f1: 0.92
+        escalation_rate: 25.0
+```
+
+### Collaboration Parameters
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `confidence_threshold` | 0.85 | Strategy A: defer if confidence below this |
+| `cost_alpha` | 0.15 | Strategy B: defer if P(pathology) > this |
 
 ---
 
