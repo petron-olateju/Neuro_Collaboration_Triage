@@ -24,9 +24,15 @@ datasets:
     path: eeg_data/Data/NMT_Events        # root folder of the downloaded dataset
     target_name: pathological             # "pathological" | "gender" | "age"
     preload: false                        # true = load all into RAM
-    train_subject_ids: [1, 2, 3, 4, 5, 6, 8, 26, 103, 112]  # 4,6 are abnormal (have CSV); 1,2,3,5 are normal
-    valid_subject_ids: [7, 9, 127, 131, 137, 219, 222]              # 8 is abnormal but CSV times outside EDF range
-    test_subject_ids: [10, 11, 138, 180, 217, 243, 245]              # both normal only
+    train_subject_ids: 
+      - [1, 2, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+      - [4, 6, 8, 26, 103, 112]  # 4,6 are abnormal (have CSV); 1,2,3,5 are normal
+    valid_subject_ids: 
+      - [21, 22, 23, 24, 30, 36, 37] 
+      - [127, 131, 137, 138, 243]             # 8 is abnormal but CSV times outside EDF range
+    test_subject_ids: 
+      - [25, 27, 28, 29, 35]
+      - [180, 217, 219, 222, 245, 247, 250]              # both normal only
     n_jobs: 1                             # parallel file-reading workers
     
   # tuab:

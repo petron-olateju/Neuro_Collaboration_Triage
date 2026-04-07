@@ -317,6 +317,9 @@ def process_abnormal_subject(
         filename = f"{subject_id}_{idx}_{label_final.replace(' ', '_')}.png"
         filepath = class_dir / filename
 
+        if filepath.exists():
+            continue
+
         if PIL:
             PIL.Image.fromarray(img).save(filepath)
         else:
@@ -372,6 +375,10 @@ def process_normal_subject(
 
         filename = f"{subject_id}_{windows_count}_Normal.png"
         filepath = class_dir / filename
+
+        if filepath.exists():
+            windows_count += 1
+            continue
 
         if PIL:
             PIL.Image.fromarray(img).save(filepath)

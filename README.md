@@ -573,8 +573,8 @@ from utils import VGG16, GoogLeNet, EfficientNetB1
 num_classes = 3  # or 2 for binary
 model = VGG16(num_classes=num_classes)
 
-# Load checkpoint
-checkpoint = torch.load("checkpoints/vgg16_three_class_best.pt")
+# Load checkpoint (use dataset name if training with --dataset)
+checkpoint = torch.load("checkpoints/nmt_vgg16_three_class_best.pt")
 model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()
 
@@ -681,7 +681,7 @@ Output: (B, num_classes)
 │ from utils import VGG16                                                       │
 │                                                                              │
 │ model = VGG16(num_classes=3)                                                 │
-│ checkpoint = torch.load("checkpoints/vgg16_three_class_best.pt")              │
+│ checkpoint = torch.load("checkpoints/nmt_vgg16_three_class_best.pt")          │
 │ model.load_state_dict(checkpoint['model_state_dict'])                        │
 │ model.eval()                                                                 │
 │                                                                              │
@@ -744,6 +744,4 @@ torch.utils.data.DataLoader
 - **Same images for both modes**: Scalogram images are generated once. The training script applies label encoding on-the-fly based on the selected mode.
 - **Class weights**: The training script automatically computes class weights to handle imbalanced datasets.
 - **Early stopping**: Training stops if validation loss doesn't improve by `min_delta` for `patience` epochs.
-- **Checkpoint naming**: 
-  - Regular: `{dataset}_{model}_{mode}_e{epoch}.pt` (e.g., `nmt_vgg16_three_class_e5.pt`)
-  - Best model: `{dataset}_{model}_{mode}_{test_id}.pt` (e.g., `nmt_vgg16_three_class_10.pt`)
+- **Checkpoint naming**: Only the best model is saved: `{dataset}_{model}_{mode}_best.pt` (e.g., `nmt_vgg16_three_class_best.pt`)

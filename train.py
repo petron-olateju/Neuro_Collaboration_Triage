@@ -43,6 +43,19 @@ LABEL_CLASSES_3 = ["Normal", "Slowing Waves", "Spike and Sharp waves"]
 LABEL_CLASSES_2 = ["Normal", "Abnormal"]
 
 
+def flatten_ids(ids):
+    """Flatten list of lists to a single list."""
+    if ids is None or ids == []:
+        return None
+    result = []
+    for item in ids:
+        if isinstance(item, list):
+            result.extend(item)
+        else:
+            result.append(item)
+    return result
+
+
 class EEGCWTDataset(Dataset):
     """PyTorch Dataset for EEG CWT scalogram images.
 
@@ -305,7 +318,7 @@ def validate(
     return avg_loss, accuracy
 
 
-def save_checkpoint(
+def save_best_checkpoint(
     model: nn.Module,
     epoch: int,
     train_loss: float,
@@ -316,10 +329,8 @@ def save_checkpoint(
     model_name: str,
     mode: str,
     dataset_name: str = "",
-    test_id: int = 0,
-    is_best: bool = False,
 ) -> Path:
-    """Save model checkpoint.
+    """Save best model checkpoint.
 
     Args:
         model         : PyTorch model.
@@ -328,8 +339,6 @@ def save_checkpoint(
         model_name    : Name of the model architecture.
         mode          : Training mode ("three_class" or "binary").
         dataset_name  : Name of the dataset (e.g., "nmt").
-        test_id       : ID of test subject for best model naming.
-        is_best       : Whether this is the best model so far.
 
     Returns:
         Path to the saved checkpoint.
@@ -338,7 +347,7 @@ def save_checkpoint(
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
     prefix = f"{dataset_name}_" if dataset_name else ""
-    filename = f"{prefix}{model_name}_{mode}_e{epoch}.pt"
+    filename = f"{prefix}{model_name}_{mode}_best.pt"
     filepath = checkpoint_dir / filename
 
     torch.save(
@@ -356,30 +365,10 @@ def save_checkpoint(
         filepath,
     )
 
-    if is_best:
-        best_filename = f"{prefix}{model_name}_{mode}_{test_id}.pt"
-        best_path = checkpoint_dir / best_filename
-        torch.save(
-            {
-                "epoch": epoch,
-                "model_state_dict": model.state_dict(),
-                "train_loss": train_loss,
-                "train_acc": train_acc,
-                "val_loss": val_loss,
-                "val_acc": val_acc,
-                "model_name": model_name,
-                "mode": mode,
-                "dataset_name": dataset_name,
-            },
-            best_path,
-        )
-
     return filepath
 
 
-def main(
-    config_path: str = "configs/training.yaml", dataset_name: str = "", test_id: int = 0
-) -> None:
+def main(config_path: str = "configs/training.yaml", dataset_name: str = "") -> None:
     """Main training function."""
     config = load_config(config_path)
     training = config["training"]
@@ -450,23 +439,20 @@ def main(
         if is_best:
             best_val_loss = val_loss
             epochs_no_improve = 0
+            checkpoint_path = save_best_checkpoint(
+                model,
+                epoch,
+                train_loss,
+                train_acc,
+                val_loss,
+                val_acc,
+                checkpoint_dir,
+                model_name,
+                mode,
+                dataset_name=dataset_name,
+            )
         else:
             epochs_no_improve += 1
-
-        checkpoint_path = save_checkpoint(
-            model,
-            epoch,
-            train_loss,
-            train_acc,
-            val_loss,
-            val_acc,
-            checkpoint_dir,
-            model_name,
-            mode,
-            dataset_name=dataset_name,
-            test_id=test_id,
-            is_best=is_best,
-        )
 
         print(
             f"Epoch {epoch}/{epochs} | "
@@ -482,11 +468,7 @@ def main(
 
     print(f"\nTraining complete. Checkpoints saved to: {checkpoint_dir}")
     prefix = f"{dataset_name}_" if dataset_name else ""
-    print(
-        f"Best model: {checkpoint_dir}/{prefix}{model_name}_{mode}_{test_id}.pt"
-        if test_id
-        else f"Best model: {checkpoint_dir}/{prefix}{model_name}_{mode}_best.pt"
-    )
+    print(f"Best model: {checkpoint_dir}/{prefix}{model_name}_{mode}_best.pt")
 
 
 if __name__ == "__main__":
@@ -556,6 +538,10 @@ if __name__ == "__main__":
             valid_ids = dataset_info.get("valid_subject_ids")
             test_ids = dataset_info.get("test_subject_ids")
 
+            train_ids = flatten_ids(train_ids)
+            valid_ids = flatten_ids(valid_ids)
+            test_ids = flatten_ids(test_ids)
+
             if not train_ids or not valid_ids or not test_ids:
                 print(
                     f"Warning: Missing split IDs for dataset {dataset_name}, skipping"
@@ -612,11 +598,14 @@ if __name__ == "__main__":
         valid_ids = dataset_info.get("valid_subject_ids")
         test_ids = dataset_info.get("test_subject_ids")
 
+        train_ids = flatten_ids(train_ids)
+        valid_ids = flatten_ids(valid_ids)
+        test_ids = flatten_ids(test_ids)
+
         if not train_ids or not valid_ids or not test_ids:
             raise ValueError(f"Missing split IDs for dataset {args.dataset}")
 
         dataset_name = args.dataset
-        test_id = test_ids[0] if test_ids else 0
 
         config = load_config(args.config)
         if args.mode:
@@ -630,6 +619,6 @@ if __name__ == "__main__":
         with open(args.config, "w") as f:
             yaml.dump(config, f)
 
-        main(args.config, dataset_name=dataset_name, test_id=test_id)
+        main(args.config, dataset_name=dataset_name)
     elif args.mode or args.model or args.epochs:
         main(args.config)
