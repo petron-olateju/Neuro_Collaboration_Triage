@@ -210,10 +210,10 @@ def find_checkpoints(checkpoint_dir):
 
 
 def parse_checkpoint_filename(filename, dataset):
-    """Parse checkpoint filename to extract model and mode info."""
+    """Parse checkpoint filename to extract model, mode, and num_classes info."""
     basename = os.path.basename(filename)
     # Format: {dataset}_{model}_{mode}_best.pt
-    # Example: nmt_vgg16_binary_best.pt
+    # Example: nmt_vgg16_binary_best.pt, nmt_vgg16_three_class_best.pt
 
     # Remove _best.pt suffix
     name_without_ext = basename.replace("_best.pt", "")
@@ -227,9 +227,11 @@ def parse_checkpoint_filename(filename, dataset):
         if parts[0] == dataset:
             model = parts[1]
             mode = parts[2]
-            return model, mode
+            # Determine num_classes from mode string
+            num_classes = 3 if "three" in mode else 2
+            return model, mode, num_classes
 
-    return None, None
+    return None, None, None
 
 
 def main():
@@ -299,16 +301,15 @@ def main():
         print("=" * 60)
 
         # Parse checkpoint name
-        model_name, mode = parse_checkpoint_filename(checkpoint_path, dataset)
+        model_name, mode, num_classes = parse_checkpoint_filename(
+            checkpoint_path, dataset
+        )
 
         if model_name is None:
             print(f"Skipping {checkpoint_path} - could not parse model/mode")
             continue
 
-        print(f"Model: {model_name}, Mode: {mode}")
-
-        # Determine num_classes
-        num_classes = 3 if mode == "three_class" else 2
+        print(f"Model: {model_name}, Mode: {mode}, Num classes: {num_classes}")
 
         # Load model
         try:
