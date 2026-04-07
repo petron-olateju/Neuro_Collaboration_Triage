@@ -348,6 +348,13 @@ def main():
         # Compute metrics for each strategy
         y_true_np = y_true.detach().cpu().numpy()
 
+        # Save original predictions/labels before computing metrics
+        baseline_preds = results["baseline"]["predictions"].copy()
+        strategy_a_labels = results["strategy_a"]["labels"].copy()
+        strategy_a_decisions = results["strategy_a"]["decisions"].copy()
+        strategy_b_labels = results["strategy_b"]["labels"].copy()
+        strategy_b_decisions = results["strategy_b"]["decisions"].copy()
+
         baseline_metrics = compute_metrics(
             y_true_np, results["baseline"]["predictions"]
         )
@@ -371,22 +378,22 @@ def main():
         print_collab_report(
             "BASELINE (AI ALONE)",
             y_true_np,
-            results["baseline"]["predictions"],
+            baseline_preds,
             ["AI"] * len(y_true_np),
         )
 
         print_collab_report(
             "STRATEGY A (CONFIDENCE-BASED)",
             y_true_np,
-            results["strategy_a"]["labels"],
-            results["strategy_a"]["decisions"],
+            strategy_a_labels,
+            strategy_a_decisions,
         )
 
         print_collab_report(
             "STRATEGY B (COST-AWARE TRIAGE)",
             y_true_np,
-            results["strategy_b"]["labels"],
-            results["strategy_b"]["decisions"],
+            strategy_b_labels,
+            strategy_b_decisions,
         )
 
         # Record to experiments
