@@ -34,6 +34,8 @@ from torchvision import transforms
 from utils import (
     GoogLeNet,
     VGG16,
+    VGG11,
+    ResNet18,
     EfficientNetB1,
 )
 from utils.mne_dataset import prepare_dataset
@@ -169,6 +171,10 @@ def create_model(
     model_name = model_name.lower()
     if model_name == "vgg16":
         return VGG16(num_classes=num_classes)
+    elif model_name == "vgg11":
+        return VGG11(num_classes=num_classes, pretrained=pretrained)
+    elif model_name == "resnet18":
+        return ResNet18(num_classes=num_classes, pretrained=pretrained)
     elif model_name == "googlenet":
         return GoogLeNet(num_classes=num_classes)
     elif model_name in ("efficientnetb1", "efficientnet_b1"):
@@ -176,7 +182,7 @@ def create_model(
     else:
         raise ValueError(
             f"Unknown model: {model_name}. "
-            "Choose from: vgg16, googlenet, efficientnetb1"
+            "Choose from: vgg16, vgg11, resnet18, googlenet, efficientnetb1"
         )
 
 
@@ -490,7 +496,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model",
         type=str,
-        choices=["vgg16", "googlenet", "efficientnetb1"],
+        choices=["vgg16", "vgg11", "resnet18", "googlenet", "efficientnetb1"],
         help="Override model from config",
     )
     parser.add_argument(

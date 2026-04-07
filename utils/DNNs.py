@@ -8,6 +8,8 @@ artifacts/source_code_files/deeplearning.ipynb.
 Models
 ------
 - VGG16        : Standard VGG-16 architecture (13 conv + 3 FC layers).
+- VGG11        : VGG-11 with pretrained ImageNet backbone + custom classifier.
+- ResNet18     : ResNet-18 with pretrained ImageNet backbone + custom classifier.
 - GoogLeNet    : Custom Inception network with auxiliary classifiers.
 - EfficientNetB1 : Pre-trained EfficientNet-B1 (timm) with custom classifier.
 
@@ -20,6 +22,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision
 
 
 class InceptionBlock(nn.Module):
@@ -291,3 +294,79 @@ class EfficientNetB1(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         features = self.backbone(x)
         return self.classifier(features)
+
+
+class VGG11(nn.Module):
+    """VGG-11 with pretrained ImageNet backbone + custom classifier.
+
+    Uses torchvision's VGG11 with ImageNet pretrained weights.
+    Replaces the original classifier with a custom head for EEG classification.
+    """
+
+    def __init__(self, num_classes: int = 3, pretrained: bool = True) -> None:
+        super().__init__()
+
+        weights = "IMAGENET1K_V1" if pretrained else None
+        backbone = torchvision.models.vgg11(weights=weights)
+
+        self.features = backbone.features
+        self.avgpool = backbone.avgpool
+
+        in_features = backbone.classifier[0].in_features
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(in_features, 4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.5),
+            nn.Linear(4096, 4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.5),
+            nn.Linear(4096, num_classes),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.features(x)
+        x = self.avgpool(x)
+        x = self.classifier(x)
+        return x
+
+
+class ResNet18(nn.Module):
+    """ResNet-18 with pretrained ImageNet backbone + custom classifier.
+
+    Uses torchvision's ResNet18 with ImageNet pretrained weights.
+    Replaces the final FC layer for EEG classification.
+    """
+
+    def __init__(self, num_classes: int = 3, pretrained: bool = True) -> None:
+        super().__init__()
+
+        weights = "IMAGENET1K_V1" if pretrained else None
+        backbone = torchvision.models.resnet18(weights=weights)
+
+        self.conv1 = backbone.conv1
+        self.bn1 = backbone.bn1
+        self.relu = backbone.relu
+        self.maxpool = backbone.maxpool
+        self.layer1 = backbone.layer1
+        self.layer2 = backbone.layer2
+        self.layer3 = backbone.layer3
+        self.layer4 = backbone.layer4
+        self.avgpool = backbone.avgpool
+
+        in_features = backbone.fc.in_features
+        self.fc = nn.Linear(in_features, num_classes)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.maxpool(x)
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
+        x = self.avgpool(x)
+        x = torch.flatten(x, 1)
+        x = self.fc(x)
+        return x

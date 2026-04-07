@@ -1,41 +1,28 @@
-# ─────────────────────────────────────────────
-# Training Configuration
-# ─────────────────────────────────────────────
-
+preprocessing:
+  cwt_freq_max: 30
+  cwt_freq_min: 1
+  cwt_n_freqs: 30
+  data_root: eeg_data/Data/NMT_Events
+  img_height: 224
+  img_width: 224
+  min_windows_per_subject: 2
+  mode: three_class
+  normal_edf_duration: 600
+  output_root: data
+  window_duration: 2.0
+  window_overlap: 0.5
 training:
-  mode: three_class  # "three_class" | "binary"
-
-  model: vgg16       # "vgg16" | "googlenet" | "efficientnetb1"
-
-  num_classes: 3     # derived from mode: 3 for three_class, 2 for binary
-
-  learning_rate: 0.0001
-
-  epochs: 30
-
   batch_size: 32
-
-  checkpoint_dir: checkpoints  # directory to save trained models
-
-  early_stopping:
-    patience: 5              # epochs to wait before stopping
-    min_delta: 0.001         # minimum improvement to qualify as progress
-
+  checkpoint_dir: checkpoints
   data:
+    test_dir: data/test
     train_dir: data/train
     valid_dir: data/valid
-    test_dir: data/test
-
-preprocessing:
-  data_root: eeg_data/Data/NMT_Events  # EDF and CSV data root
-  output_root: data                     # Output directory for generated images
-  mode: three_class                    # "three_class" | "binary"
-  window_duration: 2.0               # Window duration in seconds
-  window_overlap: 0.5                # Overlap ratio (0.5 = 50%)
-  min_windows_per_subject: 2           # Minimum windows to keep subject
-  cwt_freq_min: 1                    # Minimum CWT frequency (Hz)
-  cwt_freq_max: 30                   # Maximum CWT frequency (Hz)
-  cwt_n_freqs: 30                    # Number of frequency bins
-  img_width: 224                     # Image width
-  img_height: 224                   # Image height
-  normal_edf_duration: 600          # Default duration for normal EDF files (seconds)
+  early_stopping:
+    min_delta: 0.001
+    patience: 5
+  epochs: 1
+  learning_rate: 0.0001
+  mode: three_class
+  model: vgg16
+  num_classes: 3

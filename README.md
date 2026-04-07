@@ -516,52 +516,38 @@ Available models in `configs/training.yaml`:
 
 ## Usage
 
-### Generate Scalogram Images (All Datasets)
+### Generate Scalogram Images
+
+First, generate the CWT scalogram images from raw EDF/CSV files:
 
 ```bash
 python train.py --preprocess
 ```
 
-This reads `configs/dataset_config.yaml` and generates images for all datasets into:
+This reads `configs/dataset_config.yaml` and generates images for all configured datasets into:
 - `data/{dataset_name}/train/`
 - `data/{dataset_name}/valid/`
 - `data/{dataset_name}/test/`
 
+**Note:** The `--dataset` name in commands maps directly to the subdirectory under `data/`. For example, `--dataset nmt` expects data in `data/nmt/train/` and `data/nmt/valid/`.
+
 ### Train a Model
 
 ```bash
-# Train on specific dataset
+# Train on specific dataset (data/nmt/train and data/nmt/valid must exist)
 python train.py --dataset nmt
 
 # With custom settings
 python train.py --dataset nmt --mode binary --model googlenet --epochs 20
 ```
 
-### Load and Use Trained Model
-
-```python
-import torch
-from utils import VGG16
-
-model = VGG16(num_classes=3)
-checkpoint = torch.load("checkpoints/nmt_vgg16_three_class_10.pt")
-model.load_state_dict(checkpoint['model_state_dict'])
-model.eval()
-
-with torch.no_grad():
-    output = model(images)  # (B, num_classes)
-    predictions = output.argmax(dim=1)
-```
-
-### Train a Model
-
-```bash
-# Train on specific dataset
-python train.py --dataset nmt
-
-# Override training settings
-python train.py --dataset nmt --mode binary --model googlenet --epochs 20
-```
+**Available options:**
+| Flag | Description | Values |
+|------|-------------|--------|
+| `--dataset` | Dataset name from dataset_config.yaml | `nmt`, etc. |
+| `--mode` | Classification mode | `three_class`, `binary` |
+| `--model` | Model architecture | `vgg16`, `googlenet`, `efficientnetb1` |
+| `--epochs` | Number of training epochs | Integer |
 
 ### Load and Use Trained Model
 

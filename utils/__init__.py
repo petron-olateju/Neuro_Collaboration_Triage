@@ -1,5 +1,5 @@
 from .dataset_loader import DatasetLoader
-from .DNNs import GoogLeNet, EfficientNetB1, VGG16
+from .DNNs import GoogLeNet, EfficientNetB1, VGG16, VGG11, ResNet18
 from .preprocessing import (
     WindowExtractor,
     CWTProcessor,
@@ -26,6 +26,8 @@ __all__ = [
     "GoogLeNet",
     "EfficientNetB1",
     "VGG16",
+    "VGG11",
+    "ResNet18",
     "WindowExtractor",
     "CWTProcessor",
     "extract_labels_from_csv",
