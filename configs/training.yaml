@@ -1,0 +1,27 @@
+# ─────────────────────────────────────────────
+# Training Configuration
+# ─────────────────────────────────────────────
+
+training:
+  mode: three_class  # "three_class" | "binary"
+
+  model: vgg16       # "vgg16" | "googlenet" | "efficientnetb1"
+
+  num_classes: 3     # derived from mode: 3 for three_class, 2 for binary
+
+  learning_rate: 0.0001
+
+  epochs: 30
+
+  batch_size: 32
+
+  checkpoint_dir: checkpoints  # directory to save trained models
+
+  early_stopping:
+    patience: 5              # epochs to wait before stopping
+    min_delta: 0.001         # minimum improvement to qualify as progress
+
+  data:
+    train_dir: data/train
+    valid_dir: data/valid
+    test_dir: data/test
