@@ -40,7 +40,7 @@ def apply_collaboration_strategies(
     confidences, predictions = torch.max(y_probs, dim=1)
 
     # --- BASELINE (AI ALONE) ---
-    ai_alone_preds = predictions.numpy()
+    ai_alone_preds = predictions.detach().cpu().numpy()
     results["baseline"] = {
         "predictions": ai_alone_preds,
         "decisions": ["AI"] * len(predictions),
@@ -346,7 +346,7 @@ def main():
         )
 
         # Compute metrics for each strategy
-        y_true_np = y_true.numpy()
+        y_true_np = y_true.detach().cpu().numpy()
 
         baseline_metrics = compute_metrics(
             y_true_np, results["baseline"]["predictions"]
