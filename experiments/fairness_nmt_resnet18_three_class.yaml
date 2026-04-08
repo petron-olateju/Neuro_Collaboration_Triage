@@ -1,0 +1,47 @@
+checkpoint: nmt_resnet18_three_class
+model: resnet18
+mode: three
+num_classes: 3
+strategy_a:
+  confidence_threshold: 0.6
+  results:
+    overall:
+      accuracy: 0.7148
+      precision: 0.7952
+      recall: 0.7148
+      f1: 0.7078
+      escalation_rate: !!python/object/apply:numpy._core.multiarray.scalar
+      - &id001 !!python/object/apply:numpy.dtype
+        args:
+        - f8
+        - false
+        - true
+        state: !!python/tuple
+        - 3
+        - <
+        - null
+        - null
+        - null
+        - -1
+        - -1
+        - 0
+      - !!binary |
+        UrgeheuRPUA=
+      sample_count: 13045
+    by_gender: {}
+    by_age_group: {}
+strategy_b:
+  cost_alpha: 0.05
+  results:
+    overall:
+      accuracy: 0.8572
+      precision: 0.9012
+      recall: 0.8572
+      f1: 0.851
+      escalation_rate: !!python/object/apply:numpy._core.multiarray.scalar
+      - *id001
+      - !!binary |
+        16NwPQqHUUA=
+      sample_count: 13045
+    by_gender: {}
+    by_age_group: {}
