@@ -1052,6 +1052,78 @@ budget_risk:
 
 ---
 
+## Budget-Risk Sweep Analysis
+
+Script: `budget_risk_sweep.py`
+
+Performs a grid search over cost parameters for budget-risk collaboration strategy.
+
+### How It Works
+
+For each cost value:
+1. Calculate risk = P(abnormal) × cost
+2. Sort cases by risk (highest first)
+3. For each budget level (10%, 20%, ..., 100%):
+   - Top budget% → Human review
+   - Remaining → AI prediction
+
+### Usage
+
+```bash
+# Default (cost 0.001 to 1.0 in 0.2 steps, budget 10% to 100% in 10% steps)
+python budget_risk_sweep.py
+
+# With fairness
+python budget_risk_sweep.py --include-fairness
+```
+
+### CLI Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--checkpoint-dir` | `checkpoints` | Directory with model checkpoints |
+| `--dataset` | `nmt` | Dataset name |
+| `--output` | `experiments/budget_risk_sweep.yaml` | Output file |
+| `--cost-start` | 0.001 | Cost sweep start |
+| `--cost-end` | 1.0 | Cost sweep end |
+| `--cost-step` | 0.2 | Cost sweep step |
+| `--budget-start` | 0.1 | Budget sweep start |
+| `--budget-end` | 1.0 | Budget sweep end |
+| `--budget-step` | 0.1 | Budget sweep step |
+| `--modes` | three_class | Which modes: binary, three_class, all |
+| `--config-subjects` | True | Use abnormal subjects from config |
+| `--include-fairness` | False | Compute fairness at each sweep point |
+
+### Output
+
+Results saved to `experiments/budget_risk_sweep.yaml`:
+
+```yaml
+budget_risk_sweep:
+  nmt_resnet18_three_class:
+    model: resnet18
+    mode: three_class
+    num_classes: 3
+    cost_sweep:
+      0.001:
+        cost: 0.001
+        baseline_fairness: {...}
+        results:
+          0.1:
+            metrics: {...}
+            fairness: {...}
+          0.2:
+            ...
+      0.201:
+        cost: 0.201
+        baseline_fairness: {...}
+        results:
+          0.1:
+            ...
+```
+
+---
+
 ## Key Parameters Summary
 
 | Component | Parameter | Value | Description |
