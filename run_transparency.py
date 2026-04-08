@@ -112,6 +112,12 @@ def main():
         help="Number of uncertain samples to visualize",
     )
     parser.add_argument(
+        "--limit-samples",
+        type=int,
+        default=None,
+        help="Maximum number of samples to load into dataset (for memory-limited environments)",
+    )
+    parser.add_argument(
         "--methods",
         type=str,
         default="both",
@@ -150,6 +156,7 @@ def main():
     confidence_threshold = args.confidence
     max_samples_scan = args.max_samples_scan
     num_samples = args.num_samples
+    limit_samples = args.limit_samples
     methods = args.methods
     if methods == "both":
         methods = ["class_diff", "uncertainty"]
@@ -158,6 +165,7 @@ def main():
     print(f"Dataset: {args.dataset}")
     print(f"Confidence threshold: {confidence_threshold}")
     print(f"Number of samples: {num_samples}")
+    print(f"Max samples to load: {limit_samples if limit_samples else 'all'}")
     print(f"Methods: {methods}")
     print(f"Output: {output_dir}")
 
@@ -230,6 +238,7 @@ def main():
                 mode=mode,
                 transform=transforms_dict["test"],
                 subject_ids=test_subject_ids,
+                limit_samples=limit_samples,
             )
             test_dataset = EEGCWTMetadataDataset(base_dataset, "data/nmt_metadata.csv")
             test_loader = DataLoader(
