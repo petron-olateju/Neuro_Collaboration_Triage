@@ -46,18 +46,24 @@ class EEGCWTMetadataDataset(Dataset):
         img_path = self.base_dataset.samples[idx][0]
         filename = img_path.stem  # e.g., "0000025_0_Normal"
         parts = filename.split("_")
-        subject_id = parts[0] if parts else "unknown"
+        subject_id_str = parts[0] if parts else "unknown"
+
+        # Convert to int for lookup (CSV has int index, e.g., 25 not "0000025")
+        try:
+            subject_id_int = int(subject_id_str)
+        except ValueError:
+            subject_id_int = -1
 
         # Get metadata from CSV
-        if subject_id in self.metadata_df.index:
-            meta = self.metadata_df.loc[subject_id]
+        if subject_id_int in self.metadata_df.index:
+            meta = self.metadata_df.loc[subject_id_int]
             gender = str(meta.get("gender", "unknown"))
             age = int(meta.get("age", -1))
         else:
             gender = "unknown"
             age = -1
 
-        metadata = {"subject_id": subject_id, "gender": gender, "age": age}
+        metadata = {"subject_id": subject_id_str, "gender": gender, "age": age}
 
         return image, label, metadata
 
