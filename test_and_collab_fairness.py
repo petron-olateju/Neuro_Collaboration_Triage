@@ -124,7 +124,10 @@ def compute_group_metrics(results_list, group_key):
     """
     Compute metrics for each group in the given key (e.g., 'gender' or 'age_group').
     """
-    df = results_list.copy()
+    if isinstance(results_list, list):
+        df = pd.DataFrame(results_list)
+    else:
+        df = results_list.copy()
 
     # Add age group column
     df["age_group"] = df["age"].apply(classify_age_group)
@@ -171,7 +174,10 @@ def analyze_fairness(results_list):
     Perform fairness analysis on results.
     Returns dict with results by gender and by age group.
     """
-    results_df = results_list.copy()
+    if isinstance(results_list, list):
+        results_df = pd.DataFrame(results_list)
+    else:
+        results_df = results_list.copy()
 
     # Results by gender
     gender_metrics = compute_group_metrics(results_df, "gender")
