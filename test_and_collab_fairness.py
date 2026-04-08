@@ -28,10 +28,27 @@ DEFAULT_METADATA_CSV = "data/nmt_metadata.csv"
 # --- COLLABORATION LOGIC ---
 
 
+def get_metadata_item(metadata_list, i):
+    """Extract metadata for sample i, handling both list-of-dicts and dict-of-lists formats."""
+    if isinstance(metadata_list, dict):
+        # DataLoader collated as dict of lists
+        age_val = metadata_list["age"][i]
+        if hasattr(age_val, "item"):
+            age_val = age_val.item()
+        return {
+            "subject_id": metadata_list["subject_id"][i],
+            "gender": metadata_list["gender"][i],
+            "age": age_val,
+        }
+    else:
+        # Original list of dicts format
+        return metadata_list[i]
+
+
 def apply_strategy_a(y_true, y_probs, confidence_threshold, metadata_list):
     """
     Apply Strategy A: Confidence-based deferral.
-    Returns predictions, decisions, and metadata for each sample.
+    Returns predictions and decisions.
     """
     confidences, predictions = torch.max(y_probs, dim=1)
 
@@ -41,15 +58,17 @@ def apply_strategy_a(y_true, y_probs, confidence_threshold, metadata_list):
         decision = "AI" if confidences[i] >= confidence_threshold else "HUMAN"
         final_label = predictions[i].item() if decision == "AI" else y_true[i].item()
 
+        meta = get_metadata_item(metadata_list, i)
+
         results.append(
             {
                 "y_true": y_true[i].item(),
                 "y_pred": final_label,
                 "confidence": confidences[i].item(),
                 "decision": decision,
-                "subject_id": metadata_list[i].get("subject_id", "unknown"),
-                "gender": metadata_list[i].get("gender", "unknown"),
-                "age": metadata_list[i].get("age", -1),
+                "subject_id": meta.get("subject_id", "unknown"),
+                "gender": meta.get("gender", "unknown"),
+                "age": meta.get("age", -1),
             }
         )
 
@@ -59,7 +78,7 @@ def apply_strategy_a(y_true, y_probs, confidence_threshold, metadata_list):
 def apply_strategy_b(y_true, y_probs, cost_alpha, metadata_list):
     """
     Apply Strategy B: Cost-aware deferral (risk-based).
-    Returns predictions, decisions, and metadata for each sample.
+    Returns predictions and decisions.
     """
     results = []
 
@@ -72,15 +91,17 @@ def apply_strategy_b(y_true, y_probs, cost_alpha, metadata_list):
         _, predictions = torch.max(y_probs, dim=1)
         final_label = predictions[i].item() if decision == "AI" else y_true[i].item()
 
+        meta = get_metadata_item(metadata_list, i)
+
         results.append(
             {
                 "y_true": y_true[i].item(),
                 "y_pred": final_label,
                 "prob_pathology": prob_pathology.item(),
                 "decision": decision,
-                "subject_id": metadata_list[i].get("subject_id", "unknown"),
-                "gender": metadata_list[i].get("gender", "unknown"),
-                "age": metadata_list[i].get("age", -1),
+                "subject_id": meta.get("subject_id", "unknown"),
+                "gender": meta.get("gender", "unknown"),
+                "age": meta.get("age", -1),
             }
         )
 
