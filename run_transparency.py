@@ -100,6 +100,12 @@ def main():
         help="Uncertainty threshold - samples below this confidence are considered uncertain",
     )
     parser.add_argument(
+        "--max-samples-scan",
+        type=int,
+        default=5000,
+        help="Maximum number of samples to scan to find uncertain ones (default: 5000)",
+    )
+    parser.add_argument(
         "--num-samples",
         type=int,
         default=15,
@@ -141,23 +147,15 @@ def main():
 
     args = parser.parse_args()
 
-    print("=" * 60)
-    print("Transparency Heatmap Generator")
-    print("=" * 60)
-
-    dataset = args.dataset
-    test_dir = f"data/{dataset}/test"
-    checkpoint_dir = args.checkpoint_dir
     confidence_threshold = args.confidence
+    max_samples_scan = args.max_samples_scan
     num_samples = args.num_samples
-    methods = (
-        ["class_diff", "uncertainty"] if args.methods == "both" else [args.methods]
-    )
+    methods = args.methods
+    if methods == "both":
+        methods = ["class_diff", "uncertainty"]
     output_dir = args.output
-    use_config_subjects = args.config_subjects
 
-    print(f"Dataset: {dataset}")
-    print(f"Test dir: {test_dir}")
+    print(f"Dataset: {args.dataset}")
     print(f"Confidence threshold: {confidence_threshold}")
     print(f"Number of samples: {num_samples}")
     print(f"Methods: {methods}")
@@ -195,7 +193,7 @@ def main():
 
         # Parse checkpoint
         model_name, mode, num_classes = parse_checkpoint_filename(
-            checkpoint_path, dataset
+            checkpoint_path, args.dataset
         )
 
         if model_name is None:
@@ -218,14 +216,15 @@ def main():
 
         # Load test dataset
         try:
-            if use_config_subjects:
+            if args.config_subjects:
                 test_subject_ids = get_test_subjects_from_config(
-                    DEFAULT_CONFIG, dataset
+                    DEFAULT_CONFIG, args.dataset
                 )
                 print(f"Using {len(test_subject_ids)} config-based test subjects")
             else:
                 test_subject_ids = None
 
+            test_dir = f"data/{args.dataset}/test"
             base_dataset = EEGCWTDataset(
                 test_dir,
                 mode=mode,
@@ -250,6 +249,7 @@ def main():
             test_loader=test_loader,
             confidence_threshold=confidence_threshold,
             num_samples=num_samples,
+            max_samples_scan=max_samples_scan,
             methods=methods,
             output_dir=checkpoint_output_dir,
             device=device,

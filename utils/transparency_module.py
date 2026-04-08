@@ -120,14 +120,14 @@ def compute_class_difference_attribution(model, input_tensor, num_steps=50):
 
     attr_class1, delta1 = ig.attribute(
         input_tensor,
-        baseline=baseline,
+        baselines=baseline,
         target=1,  # Slowing Waves
         return_convergence_delta=True,
     )
 
     attr_class2, delta2 = ig.attribute(
         input_tensor,
-        baseline=baseline,
+        baselines=baseline,
         target=2,  # Spike/Sharp Waves
         return_convergence_delta=True,
     )
@@ -165,23 +165,20 @@ def compute_uncertainty_attribution(model, input_tensor, num_steps=50):
     if input_tensor.dim() == 3:
         input_tensor = input_tensor.unsqueeze(0)
 
+    input_tensor = input_tensor.clone()
     input_tensor.requires_grad_(True)
 
     output = model(input_tensor)
     probs = torch.softmax(output, dim=1)
 
-    # Get max probability and its class
     max_prob, pred_class = torch.max(probs, dim=1)
-
-    # Uncertainty = 1 - max_prob
     uncertainty = 1 - max_prob
 
-    # Backpropagate to get gradients
     model.zero_grad()
-    uncertainty.backward(retain_graph=True)
+    uncertainty.backward()
 
-    # Gradient magnitude = uncertainty attribution
     attribution = torch.abs(input_tensor.grad)
+    attribution = attribution.detach()
 
     return attribution
 
@@ -346,12 +343,15 @@ def generate_transparency_report(
     test_loader,
     confidence_threshold=0.5,
     num_samples=15,
+    max_samples_scan=5000,
     methods=["class_diff", "uncertainty"],
     output_dir="experiments/transparency/",
     device="cpu",
 ):
     """
     Generate transparency report for uncertain samples.
+
+    Memory-efficient version that scans samples incrementally.
 
     Parameters
     ----------
@@ -363,6 +363,8 @@ def generate_transparency_report(
         Threshold below which samples are considered uncertain
     num_samples : int
         Maximum number of samples to visualize
+    max_samples_scan : int
+        Maximum number of samples to scan before stopping (to avoid OOM)
     methods : list
         Attribution methods to use: "class_diff", "uncertainty", or both
     output_dir : str
@@ -378,67 +380,121 @@ def generate_transparency_report(
     model.eval()
     os.makedirs(output_dir, exist_ok=True)
 
-    # Collect predictions and metadata
-    all_images = []
-    all_labels = []
-    all_probs = []
-    all_metadata = []
+    print(f"Scanning up to {max_samples_scan} samples for uncertain cases...")
+
+    # Store uncertain samples as we find them (not all samples)
+    uncertain_samples = []
+    samples_scanned = 0
+    uncertain_found = 0
 
     with torch.no_grad():
         for batch in test_loader:
+            # Check if we've scanned enough
+            if samples_scanned >= max_samples_scan:
+                print(f"Reached max samples scan limit ({max_samples_scan})")
+                break
+
             if len(batch) == 3:
                 images, labels, metadata = batch
             else:
                 images, labels = batch
                 metadata = None
 
-            images = images.to(device)
-            outputs = model(images)
+            batch_size = images.shape[0]
+
+            # Move to device and get predictions
+            images_device = images.to(device)
+            outputs = model(images_device)
             if isinstance(outputs, tuple):
                 outputs = outputs[0]
             probs = torch.softmax(outputs, dim=1)
 
-            all_images.append(images.cpu())
-            all_labels.append(labels)
-            all_probs.append(probs.cpu())
+            # Get max probabilities for the batch
+            max_probs, predicted_classes = torch.max(probs, dim=1)
 
-            if metadata:
-                # Handle dict-of-lists format
-                if isinstance(metadata, dict):
-                    for j in range(images.shape[0]):
-                        all_metadata.append(
-                            {
-                                "subject_id": str(metadata["subject_id"][j])
+            # Process each sample in the batch
+            for j in range(batch_size):
+                if samples_scanned >= max_samples_scan:
+                    break
+
+                conf = max_probs[j].item()
+
+                # Check if uncertain
+                if conf < confidence_threshold:
+                    # Store sample info (not the image, just metadata)
+                    sample_info = {
+                        "batch_idx": samples_scanned // 32,  # approximate batch index
+                        "sample_in_batch": j,
+                        "index": samples_scanned,
+                        "true_label": labels[j].item(),
+                        "prediction": predicted_classes[j].item(),
+                        "confidence": round(conf, 4),
+                    }
+
+                    # Add metadata if available
+                    if metadata:
+                        if isinstance(metadata, dict):
+                            sample_info["subject_id"] = (
+                                str(metadata["subject_id"][j])
                                 if hasattr(metadata["subject_id"][j], "item")
-                                else str(metadata["subject_id"][j]),
-                                "gender": str(metadata["gender"][j])
+                                else str(metadata["subject_id"][j])
+                            )
+                            sample_info["gender"] = (
+                                str(metadata["gender"][j])
                                 if hasattr(metadata["gender"][j], "item")
-                                else str(metadata["gender"][j]),
-                                "age": int(metadata["age"][j].item())
+                                else str(metadata["gender"][j])
+                            )
+                            sample_info["age"] = (
+                                int(metadata["age"][j].item())
                                 if hasattr(metadata["age"][j], "item")
-                                else int(metadata["age"][j]),
-                            }
+                                else int(metadata["age"][j])
+                            )
+                        else:
+                            sample_info["subject_id"] = str(
+                                metadata[j].get("subject_id", "unknown")
+                            )
+                            sample_info["gender"] = str(
+                                metadata[j].get("gender", "unknown")
+                            )
+                            sample_info["age"] = int(metadata[j].get("age", -1))
+
+                    # Store image data for later processing (on CPU)
+                    uncertain_samples.append(
+                        {
+                            "image": images[j].clone().cpu(),
+                            "info": sample_info,
+                        }
+                    )
+                    uncertain_found += 1
+
+                    # Limit the number we collect
+                    if uncertain_found >= num_samples:
+                        print(
+                            f"Found {num_samples} uncertain samples, stopping scan..."
                         )
-                else:
-                    all_metadata.extend(metadata)
+                        break
 
-    # Concatenate
-    all_images = torch.cat(all_images, dim=0)
-    all_labels = torch.cat(all_labels, dim=0)
-    all_probs = torch.cat(all_probs, dim=0)
+                samples_scanned += 1
 
-    # Get uncertain sample indices
-    uncertain_indices = get_uncertain_samples_indices(all_probs, confidence_threshold)
+                # Print progress periodically
+                if samples_scanned % 1000 == 0:
+                    print(
+                        f"  Scanned {samples_scanned} samples, found {uncertain_found} uncertain..."
+                    )
+
+            # Stop if we found enough
+            if uncertain_found >= num_samples:
+                break
 
     print(
-        f"Found {len(uncertain_indices)} uncertain samples (confidence < {confidence_threshold})"
+        f"Scanned {samples_scanned} samples, found {uncertain_found} uncertain samples"
     )
 
-    # Limit number of samples
-    if len(uncertain_indices) > num_samples:
-        uncertain_indices = uncertain_indices[:num_samples]
+    if len(uncertain_samples) == 0:
+        print("No uncertain samples found! Try lowering the confidence threshold.")
+        return {"samples": [], "error": "No uncertain samples found"}
 
-    print(f"Generating visualizations for {len(uncertain_indices)} samples...")
+    print(f"Generating visualizations for {len(uncertain_samples)} samples...")
 
     # Create subdirectories
     class_diff_dir = os.path.join(output_dir, "class_difference")
@@ -453,78 +509,99 @@ def generate_transparency_report(
     metadata = {
         "confidence_threshold": confidence_threshold,
         "num_samples_requested": num_samples,
-        "num_samples_generated": len(uncertain_indices),
+        "num_samples_scanned": samples_scanned,
+        "num_samples_generated": len(uncertain_samples),
         "samples": [],
     }
 
-    for i, idx in enumerate(uncertain_indices):
-        input_tensor = all_images[idx]
-        true_label = all_labels[idx].item()
-        probs = all_probs[idx]
-        max_prob, pred_class = torch.max(probs, dim=0)
-        max_prob = max_prob.item()
-        pred_class = pred_class.item()
+    for i, sample_data in enumerate(uncertain_samples):
+        input_tensor = sample_data["image"]
+        sample_info = sample_data["info"]
 
-        sample_info = {
-            "index": idx,
-            "true_label": int(true_label),
-            "prediction": int(pred_class),
-            "confidence": max_prob,
-        }
-
-        if all_metadata and idx < len(all_metadata):
-            sample_info.update(all_metadata[idx])
-
-        # Compute attributions
+        # Move to device for attribution
         input_for_model = input_tensor.unsqueeze(0).to(device)
 
-        # Class difference attribution
-        if "class_diff" in methods:
-            class_diff_attr, _ = compute_class_difference_attribution(
-                model, input_for_model
-            )
-            class_diff_attr = class_diff_attr.squeeze().cpu()
+        try:
+            # Class difference attribution
+            if "class_diff" in methods:
+                class_diff_attr, _ = compute_class_difference_attribution(
+                    model, input_for_model
+                )
+                class_diff_attr = class_diff_attr.squeeze().cpu()
 
-            save_path = os.path.join(
-                class_diff_dir, f"sample_{i + 1:03d}_uncertain.png"
-            )
-            create_visualization(
-                input_tensor,
-                class_diff_attr,
-                save_path,
-                title=f"Abnormal Attribution (Conf: {max_prob:.3f})",
+                save_path = os.path.join(
+                    class_diff_dir, f"sample_{i + 1:03d}_uncertain.png"
+                )
+                create_visualization(
+                    input_tensor,
+                    class_diff_attr,
+                    save_path,
+                    title=f"Abnormal Attribution (Conf: {sample_info['confidence']})",
+                )
+
+                del class_diff_attr
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+
+            # Uncertainty attribution
+            if "uncertainty" in methods:
+                uncertainty_attr = compute_uncertainty_attribution(
+                    model, input_for_model
+                )
+                uncertainty_attr = uncertainty_attr.squeeze().cpu()
+
+                save_path = os.path.join(
+                    uncertainty_dir, f"sample_{i + 1:03d}_uncertain.png"
+                )
+                create_visualization(
+                    input_tensor,
+                    uncertainty_attr,
+                    save_path,
+                    title=f"Uncertainty Regions (Conf: {sample_info['confidence']})",
+                )
+
+                # Clear GPU memory
+                del uncertainty_attr
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+
+            # Comparison visualization
+            if "class_diff" in methods and "uncertainty" in methods:
+                # Recompute for comparison (since we deleted them above)
+                class_diff_attr, _ = compute_class_difference_attribution(
+                    model, input_for_model
+                )
+                class_diff_attr = class_diff_attr.squeeze().cpu()
+
+                uncertainty_attr = compute_uncertainty_attribution(
+                    model, input_for_model
+                )
+                uncertainty_attr = uncertainty_attr.squeeze().cpu()
+
+                save_path = os.path.join(comparison_dir, f"sample_{i + 1:03d}_both.png")
+                create_comparison_visualization(
+                    input_tensor,
+                    class_diff_attr,
+                    uncertainty_attr,
+                    save_path,
+                    sample_info=sample_info,
+                )
+
+                del class_diff_attr, uncertainty_attr
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+
+            metadata["samples"].append(sample_info)
+            print(
+                f"  Processed sample {i + 1}/{len(uncertain_samples)}: conf={sample_info['confidence']}"
             )
 
-        # Uncertainty attribution
-        if "uncertainty" in methods:
-            uncertainty_attr = compute_uncertainty_attribution(model, input_for_model)
-            uncertainty_attr = uncertainty_attr.squeeze().cpu()
+            # Clear memory after each sample
+            del input_for_model
 
-            save_path = os.path.join(
-                uncertainty_dir, f"sample_{i + 1:03d}_uncertain.png"
-            )
-            create_visualization(
-                input_tensor,
-                uncertainty_attr,
-                save_path,
-                title=f"Uncertainty Regions (Conf: {max_prob:.3f})",
-            )
-
-        # Comparison visualization
-        if "class_diff" in methods and "uncertainty" in methods:
-            save_path = os.path.join(comparison_dir, f"sample_{i + 1:03d}_both.png")
-            create_comparison_visualization(
-                input_tensor,
-                class_diff_attr,
-                uncertainty_attr,
-                save_path,
-                sample_info=sample_info,
-            )
-
-        metadata["samples"].append(sample_info)
-        print(
-            f"  Processed sample {i + 1}/{len(uncertain_indices)}: idx={idx}, conf={max_prob:.3f}, pred={pred_class}"
-        )
+        except Exception as e:
+            print(f"  Warning: Failed to process sample {i + 1}: {e}")
+            continue
 
     # Save metadata
     metadata_path = os.path.join(output_dir, "metadata.json")
@@ -563,6 +640,9 @@ def main():
     )
     parser.add_argument(
         "--num-samples", type=int, default=15, help="Number of samples to visualize"
+    )
+    parser.add_argument(
+        "--max-samples-scan", type=int, default=5000, help="Max samples to scan"
     )
     parser.add_argument(
         "--methods",
