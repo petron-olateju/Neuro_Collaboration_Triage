@@ -28,8 +28,28 @@ strategy_a:
       - !!binary |
         UrgeheuRPUA=
       sample_count: 13045
-    by_gender: {}
-    by_age_group: {}
+    by_gender:
+      Male:
+        accuracy: 0.6549
+        precision: 0.9911
+        recall: 0.6549
+        f1: 0.7662
+        escalation_rate: !!python/object/apply:numpy._core.multiarray.scalar
+        - *id001
+        - !!binary |
+          H4XrUbh+Q0A=
+        sample_count: 8859
+    by_age_group:
+      pediatric:
+        accuracy: 0.6549
+        precision: 0.9911
+        recall: 0.6549
+        f1: 0.7662
+        escalation_rate: !!python/object/apply:numpy._core.multiarray.scalar
+        - *id001
+        - !!binary |
+          H4XrUbh+Q0A=
+        sample_count: 8859
 strategy_b:
   cost_alpha: 0.05
   results:
@@ -43,5 +63,25 @@ strategy_b:
       - !!binary |
         16NwPQqHUUA=
       sample_count: 13045
-    by_gender: {}
-    by_age_group: {}
+    by_gender:
+      Male:
+        accuracy: 0.7897
+        precision: 1.0
+        recall: 0.7897
+        f1: 0.8666
+        escalation_rate: !!python/object/apply:numpy._core.multiarray.scalar
+        - *id001
+        - !!binary |
+          rkfhehS+U0A=
+        sample_count: 8859
+    by_age_group:
+      pediatric:
+        accuracy: 0.7897
+        precision: 1.0
+        recall: 0.7897
+        f1: 0.8666
+        escalation_rate: !!python/object/apply:numpy._core.multiarray.scalar
+        - *id001
+        - !!binary |
+          rkfhehS+U0A=
+        sample_count: 8859
