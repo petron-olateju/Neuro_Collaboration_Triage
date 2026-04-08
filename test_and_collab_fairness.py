@@ -381,7 +381,7 @@ def main():
             # Wrap with metadata
             test_dataset = EEGCWTMetadataDataset(base_dataset, metadata_csv)
             test_loader = torch.utils.data.DataLoader(
-                test_dataset, batch_size=32, shuffle=False, num_workers=4
+                test_dataset, batch_size=32, shuffle=False, num_workers=0
             )
             print(f"Loaded test data: {len(test_dataset)} samples")
         except Exception as e:
