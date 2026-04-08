@@ -21,6 +21,7 @@ A PyTorch-based deep learning pipeline for EEG anomaly classification using CWT 
 10. [End-to-End Workflow](#end-to-end-workflow)
 11. [Collaboration Analysis](#collaboration-analysis)
 12. [Collaboration Parameter Sweep](#collaboration-parameter-sweep)
+13. [Fairness Analysis](#fairness-analysis)
 
 ---
 
@@ -151,7 +152,8 @@ EEG_Anomaly_Triage/
 ├── experiments/              # Collaboration analysis results
 │   ├── experiment.yaml      # Single run results (timestamp-keyed)
 │   ├── confidence_threshold_sweep.yaml  # Sweep results for confidence threshold
-│   └── cost_alpha_sweep.yaml  # Sweep results for cost alpha
+│   ├── cost_alpha_sweep.yaml  # Sweep results for cost alpha
+│   └── fairness_{checkpoint}.yaml  # Fairness analysis results (per checkpoint)
 └── artifacts/
     └── source_code_files/   # Original Jupyter notebooks (reference)
 ```
@@ -833,6 +835,105 @@ nmt_vgg16_binary:
         ...
       ...
 ```
+
+---
+
+## Fairness Analysis
+
+Script: `test_and_collab_fairness.py`
+
+Performs subgroup fairness analysis to evaluate model performance across demographic groups (gender, age). Uses both collaboration strategies (A and B) and computes metrics per subgroup.
+
+### Prerequisites
+
+First, generate metadata from CSV annotation files:
+
+```bash
+python generate_metadata.py
+```
+
+This creates `data/nmt_metadata.csv` with subject_id, gender, and age (extracted from CSV headers).
+
+### Usage
+
+```bash
+# Auto-discover all checkpoints
+python test_and_collab_fairness.py
+
+# Run specific checkpoint
+python test_and_collab_fairness.py --model vgg16 --mode binary
+
+# With custom settings
+python test_and_collab_fairness.py --model googlenet --mode three_class --confidence-threshold 0.9 --cost-alpha 0.1
+```
+
+### CLI Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--dataset` | `nmt` | Dataset name |
+| `--metadata-csv` | `data/nmt_metadata.csv` | Path to metadata CSV |
+| `--confidence-threshold` | 0.85 | Strategy A threshold |
+| `--cost-alpha` | 0.15 | Strategy B threshold |
+| `--model` | None | Model name (use with --mode) |
+| `--mode` | None | Mode (use with --model) |
+
+### Output
+
+Results saved to `experiments/fairness_{checkpoint}.yaml` for each checkpoint:
+
+```yaml
+checkpoint: nmt_vgg16_binary
+model: vgg16
+mode: binary
+num_classes: 2
+
+strategy_a:
+  confidence_threshold: 0.85
+  results:
+    overall:
+      accuracy: 0.85
+      precision: 0.83
+      recall: 0.87
+      f1: 0.85
+      escalation_rate: 12.5
+    by_gender:
+      M:
+        accuracy: 0.87
+        escalation_rate: 10.0
+      F:
+        accuracy: 0.85
+        escalation_rate: 15.0
+    by_age_group:
+      pediatric:
+        accuracy: 0.86
+        escalation_rate: 8.0
+      adult:
+        accuracy: 0.85
+        escalation_rate: 12.0
+      senior:
+        accuracy: 0.88
+        escalation_rate: 18.0
+
+strategy_b:
+  cost_alpha: 0.15
+  results:
+    overall:
+      accuracy: 0.90
+      escalation_rate: 25.0
+    by_gender:
+      ...
+    by_age_group:
+      ...
+```
+
+### Age Group Definitions
+
+| Group | Age Range |
+|-------|-----------|
+| Pediatric | 0-18 |
+| Adult | 19-64 |
+| Senior | 65+ |
 
 ---
 
