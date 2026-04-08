@@ -368,16 +368,30 @@ def run_inference_with_metadata(model, dataloader, device):
             # Collect metadata per sample
             batch_size = labels.shape[0]
             for j in range(batch_size):
-                meta = metadata[j]
-                gender = meta.get("gender", "unknown")
-                if hasattr(gender, "item"):
-                    gender = gender.item()
-                age = meta.get("age", -1)
-                if hasattr(age, "item"):
-                    age = age.item()
+                # Handle both dict-of-lists (from DataLoader) and list-of-dicts
+                if isinstance(metadata, dict):
+                    gender = metadata["gender"][j]
+                    if hasattr(gender, "item"):
+                        gender = gender.item()
+                    age = metadata["age"][j]
+                    if hasattr(age, "item"):
+                        age = age.item()
+                    subject_id = metadata["subject_id"][j]
+                    if hasattr(subject_id, "item"):
+                        subject_id = subject_id.item()
+                else:
+                    meta = metadata[j]
+                    gender = meta.get("gender", "unknown")
+                    if hasattr(gender, "item"):
+                        gender = gender.item()
+                    age = meta.get("age", -1)
+                    if hasattr(age, "item"):
+                        age = age.item()
+                    subject_id = meta.get("subject_id", "unknown")
+
                 all_metadata.append(
                     {
-                        "subject_id": str(meta.get("subject_id", "unknown")),
+                        "subject_id": str(subject_id),
                         "gender": str(gender),
                         "age": int(age),
                     }
