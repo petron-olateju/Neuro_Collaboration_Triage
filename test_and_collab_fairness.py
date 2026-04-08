@@ -40,9 +40,18 @@ def get_metadata_item(metadata_list, i):
             "gender": metadata_list["gender"][i],
             "age": age_val,
         }
+    elif isinstance(metadata_list, list) and len(metadata_list) > i:
+        item = metadata_list[i]
+        if isinstance(item, dict):
+            return item
+        elif isinstance(item, str):
+            parts = item.split("_")
+            subject_id = parts[0] if parts else "unknown"
+            return {"subject_id": subject_id, "gender": "unknown", "age": -1}
+        else:
+            return {"subject_id": str(item), "gender": "unknown", "age": -1}
     else:
-        # Original list of dicts format
-        return metadata_list[i]
+        return {"subject_id": "unknown", "gender": "unknown", "age": -1}
 
 
 def apply_strategy_a(y_true, y_probs, confidence_threshold, metadata_list):
