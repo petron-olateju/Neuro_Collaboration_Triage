@@ -8,6 +8,7 @@ from datetime import datetime
 import torch
 import torch.nn.functional as F
 import numpy as np
+import pandas as pd
 import yaml
 from sklearn.metrics import classification_report, confusion_matrix
 
@@ -16,6 +17,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from train import EEGCWTDataset, create_model, get_default_transforms, load_config
+from utils.dataset_with_metadata import EEGCWTMetadataDataset, classify_age_group
 
 
 # --- CONFIGURATION ---
@@ -141,26 +143,149 @@ def compute_metrics(y_true, y_pred, decisions=None):
     return metrics
 
 
+# --- FAIRNESS FUNCTIONS ---
+
+
+def create_results_list(y_true_np, predictions, decisions, metadata_list):
+    """Create list of dicts with metadata for fairness analysis."""
+    results = []
+    for i in range(len(predictions)):
+        meta = metadata_list[i]
+        gender = meta.get("gender", "unknown")
+        if hasattr(gender, "item"):
+            gender = gender.item()
+        age = meta.get("age", -1)
+        if hasattr(age, "item"):
+            age = age.item()
+
+        results.append(
+            {
+                "y_true": int(y_true_np[i]),
+                "y_pred": int(predictions[i])
+                if isinstance(predictions[i], (int, np.integer))
+                else int(predictions[i].item()),
+                "decision": decisions[i],
+                "subject_id": str(meta.get("subject_id", "unknown")),
+                "gender": str(gender),
+                "age": int(age),
+            }
+        )
+    return results
+
+
+def compute_fairness_from_results(results_list):
+    """Compute fairness metrics from results list."""
+    if isinstance(results_list, list):
+        df = pd.DataFrame(results_list)
+    else:
+        df = results_list.copy()
+
+    # Compute by gender
+    gender_metrics = {}
+    for group_name, group_df in df.groupby("gender"):
+        if str(group_name) == "unknown":
+            continue
+        y_t = group_df["y_true"].values
+        y_p = group_df["y_pred"].values
+        dec = group_df["decision"].values
+        report = classification_report(y_t, y_p, zero_division=0, output_dict=True)
+        human_count = (dec == "HUMAN").sum()
+        gender_metrics[str(group_name)] = {
+            "accuracy": round(float(report["accuracy"]), 4),
+            "f1": round(float(report["weighted avg"]["f1-score"]), 4),
+            "escalation_rate": round(float(human_count / len(dec)) * 100, 2)
+            if len(dec) > 0
+            else 0,
+            "sample_count": len(group_df),
+        }
+
+    # Compute by age_group
+    df["age_group"] = df["age"].apply(classify_age_group)
+    age_metrics = {}
+    for group_name, group_df in df.groupby("age_group"):
+        if str(group_name) == "unknown":
+            continue
+        y_t = group_df["y_true"].values
+        y_p = group_df["y_pred"].values
+        dec = group_df["decision"].values
+        report = classification_report(y_t, y_p, zero_division=0, output_dict=True)
+        human_count = (dec == "HUMAN").sum()
+        age_metrics[str(group_name)] = {
+            "accuracy": round(float(report["accuracy"]), 4),
+            "f1": round(float(report["weighted avg"]["f1-score"]), 4),
+            "escalation_rate": round(float(human_count / len(dec)) * 100, 2)
+            if len(dec) > 0
+            else 0,
+            "sample_count": len(group_df),
+        }
+
+    # Overall
+    y_t = df["y_true"].values
+    y_p = df["y_pred"].values
+    dec = df["decision"].values
+    report = classification_report(y_t, y_p, zero_division=0, output_dict=True)
+    human_count = (dec == "HUMAN").sum()
+    overall = {
+        "accuracy": round(float(report["accuracy"]), 4),
+        "f1": round(float(report["weighted avg"]["f1-score"]), 4),
+        "escalation_rate": round(float(human_count / len(dec)) * 100, 2)
+        if len(dec) > 0
+        else 0,
+        "sample_count": len(df),
+    }
+
+    return {
+        "overall": overall,
+        "by_gender": gender_metrics,
+        "by_age_group": age_metrics,
+    }
+
+
 # --- SWEEP FUNCTIONS ---
 
 
-def sweep_confidence_thresholds(y_true, y_probs, thresholds, cost_alpha_fixed=1.0):
+def sweep_confidence_thresholds(
+    y_true,
+    y_probs,
+    thresholds,
+    metadata_list=None,
+    compute_fairness=False,
+    cost_alpha_fixed=1.0,
+):
     """
     Sweep confidence_threshold values while keeping cost_alpha fixed.
     With cost_alpha=1.0, Strategy B never triggers.
     """
     results = {}
     y_true_np = y_true.detach().cpu().numpy()
+    predictions_np = torch.argmax(y_probs, dim=1).detach().cpu().numpy()
 
     for threshold in thresholds:
         labels, decisions = apply_strategy_a(y_true, y_probs, threshold)
         metrics = compute_metrics(y_true_np, labels, decisions)
-        results[round(threshold, 2)] = metrics
+
+        sweep_result = {"metrics": metrics}
+
+        if compute_fairness and metadata_list is not None:
+            results_list = create_results_list(
+                y_true_np, labels, decisions, metadata_list
+            )
+            fairness = compute_fairness_from_results(results_list)
+            sweep_result["fairness"] = fairness
+
+        results[round(threshold, 2)] = sweep_result
 
     return results
 
 
-def sweep_cost_alphas(y_true, y_probs, alphas, confidence_threshold_fixed=0.0):
+def sweep_cost_alphas(
+    y_true,
+    y_probs,
+    alphas,
+    metadata_list=None,
+    compute_fairness=False,
+    confidence_threshold_fixed=0.0,
+):
     """
     Sweep cost_alpha values while keeping confidence_threshold fixed.
     With confidence_threshold=0.0, Strategy A always accepts AI.
@@ -171,7 +296,17 @@ def sweep_cost_alphas(y_true, y_probs, alphas, confidence_threshold_fixed=0.0):
     for alpha in alphas:
         labels, decisions = apply_strategy_b(y_true, y_probs, alpha)
         metrics = compute_metrics(y_true_np, labels, decisions)
-        results[round(alpha, 2)] = metrics
+
+        sweep_result = {"metrics": metrics}
+
+        if compute_fairness and metadata_list is not None:
+            results_list = create_results_list(
+                y_true_np, labels, decisions, metadata_list
+            )
+            fairness = compute_fairness_from_results(results_list)
+            sweep_result["fairness"] = fairness
+
+        results[round(alpha, 2)] = sweep_result
 
     return results
 
@@ -201,6 +336,57 @@ def parse_checkpoint_filename(filename, dataset):
 
 
 # --- INFERENCE ---
+
+
+def run_inference_with_metadata(model, dataloader, device):
+    """Run model inference on test data and return with metadata."""
+    model.eval()
+    all_labels = []
+    all_probs = []
+    all_metadata = []
+
+    with torch.no_grad():
+        for batch in dataloader:
+            # Handle both (images, labels) and (images, labels, metadata) formats
+            if len(batch) == 3:
+                images, labels, metadata = batch
+            else:
+                images, labels = batch
+                metadata = [
+                    {"subject_id": "unknown", "gender": "unknown", "age": -1}
+                ] * len(labels)
+
+            images = images.to(device)
+            outputs = model(images)
+            if isinstance(outputs, tuple):
+                outputs = outputs[0]
+            probs = F.softmax(outputs, dim=1)
+
+            all_labels.append(labels)
+            all_probs.append(probs)
+
+            # Collect metadata per sample
+            batch_size = labels.shape[0]
+            for j in range(batch_size):
+                meta = metadata[j]
+                gender = meta.get("gender", "unknown")
+                if hasattr(gender, "item"):
+                    gender = gender.item()
+                age = meta.get("age", -1)
+                if hasattr(age, "item"):
+                    age = age.item()
+                all_metadata.append(
+                    {
+                        "subject_id": str(meta.get("subject_id", "unknown")),
+                        "gender": str(gender),
+                        "age": int(age),
+                    }
+                )
+
+    y_true = torch.cat(all_labels)
+    y_probs = torch.cat(all_probs)
+
+    return y_true, y_probs, all_metadata
 
 
 def run_inference(model, dataloader, device):
@@ -281,6 +467,19 @@ def main():
         default=True,
         help="Use abnormal subjects from config for testing (default: True)",
     )
+    parser.add_argument(
+        "--modes",
+        type=str,
+        default="three_class",
+        choices=["binary", "three_class", "all"],
+        help="Which modes to test: binary, three_class, or all (default: three_class)",
+    )
+    parser.add_argument(
+        "--include-fairness",
+        action="store_true",
+        default=False,
+        help="Compute fairness metrics (by gender/age) at each sweep point",
+    )
 
     args = parser.parse_args()
 
@@ -292,6 +491,8 @@ def main():
     test_dir = f"data/{dataset}/test"
     checkpoint_dir = DEFAULT_CHECKPOINT_DIR
     use_config_subjects = args.config_subjects
+    modes_to_test = args.modes
+    include_fairness = args.include_fairness
 
     # Generate sweep values
     confidence_thresholds = np.arange(
@@ -306,6 +507,7 @@ def main():
 
     print(f"Dataset: {dataset}")
     print(f"Test dir: {test_dir}")
+    print(f"Include fairness: {include_fairness}")
     print(
         f"Confidence thresholds: {len(confidence_thresholds)} values from {args.confidence_start} to {args.confidence_end}"
     )
@@ -347,6 +549,18 @@ def main():
             print(f"Skipping {checkpoint_path} - could not parse model/mode")
             continue
 
+        # Skip modes based on --modes argument
+        if modes_to_test == "three_class" and mode == "binary":
+            print(
+                f"Skipping {checkpoint_path} - binary mode skipped (use --modes all to run)"
+            )
+            continue
+        if modes_to_test == "binary" and mode != "binary":
+            print(
+                f"Skipping {checkpoint_path} - three_class mode skipped (use --modes all to run)"
+            )
+            continue
+
         checkpoint_key = os.path.basename(checkpoint_path).replace("_best.pt", "")
         print(f"Model: {model_name}, Mode: {mode}, Num classes: {num_classes}")
 
@@ -377,6 +591,13 @@ def main():
                 transform=transforms_dict["test"],
                 subject_ids=test_subject_ids,
             )
+
+            # Wrap with metadata dataset if fairness is requested
+            if include_fairness:
+                test_dataset = EEGCWTMetadataDataset(
+                    test_dataset, "data/nmt_metadata.csv"
+                )
+
             test_loader = torch.utils.data.DataLoader(
                 test_dataset, batch_size=32, shuffle=False, num_workers=4
             )
@@ -385,35 +606,71 @@ def main():
             print(f"Failed to load test data: {e}")
             continue
 
-        # Run inference once
-        y_true, y_probs = run_inference(model, test_loader, device)
+        # Run inference with metadata if fairness requested
+        if include_fairness:
+            y_true, y_probs, metadata_list = run_inference_with_metadata(
+                model, test_loader, device
+            )
+        else:
+            y_true, y_probs = run_inference(model, test_loader, device)
+            metadata_list = None
 
         print(f"Running sweeps...")
 
+        # Compute baseline fairness if requested
+        baseline_fairness = None
+        if include_fairness and metadata_list is not None:
+            # Baseline: AI always decides (no deferral)
+            predictions = torch.argmax(y_probs, dim=1).detach().cpu().numpy()
+            baseline_decisions = ["AI"] * len(predictions)
+            y_true_np = y_true.detach().cpu().numpy()
+            baseline_results = create_results_list(
+                y_true_np, predictions, baseline_decisions, metadata_list
+            )
+            baseline_fairness = compute_fairness_from_results(baseline_results)
+
         # Sweep confidence thresholds (with cost_alpha=1.0 so Strategy B never triggers)
         confidence_results = sweep_confidence_thresholds(
-            y_true, y_probs, confidence_thresholds, cost_alpha_fixed=1.0
+            y_true,
+            y_probs,
+            confidence_thresholds,
+            metadata_list=metadata_list,
+            compute_fairness=include_fairness,
+            cost_alpha_fixed=1.0,
         )
 
         # Sweep cost alphas (with confidence_threshold=0.0 so Strategy A always accepts AI)
         cost_results = sweep_cost_alphas(
-            y_true, y_probs, cost_alphas, confidence_threshold_fixed=0.0
+            y_true,
+            y_probs,
+            cost_alphas,
+            metadata_list=metadata_list,
+            compute_fairness=include_fairness,
+            confidence_threshold_fixed=0.0,
         )
 
         # Store results
-        confidence_sweep_results[checkpoint_key] = {
+        result_entry = {
             "model": model_name,
             "mode": mode,
             "num_classes": num_classes,
             "sweeps": {"confidence_threshold": confidence_results},
         }
+        if baseline_fairness is not None:
+            result_entry["baseline_fairness"] = baseline_fairness
 
-        cost_sweep_results[checkpoint_key] = {
+        confidence_sweep_results[checkpoint_key] = result_entry
+
+        cost_entry = {
             "model": model_name,
             "mode": mode,
             "num_classes": num_classes,
             "sweeps": {"cost_alpha": cost_results},
         }
+        if baseline_fairness is not None:
+            cost_entry["baseline_fairness"] = baseline_fairness
+
+        cost_sweep_results[checkpoint_key] = cost_entry
 
         print(f"Sweep complete for {checkpoint_key}")
 

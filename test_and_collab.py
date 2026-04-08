@@ -301,6 +301,13 @@ def main():
         default=True,
         help="Use abnormal subjects from config for testing (default: True)",
     )
+    parser.add_argument(
+        "--modes",
+        type=str,
+        default="three_class",
+        choices=["binary", "three_class", "all"],
+        help="Which modes to test: binary, three_class, or all (default: three_class)",
+    )
 
     args = parser.parse_args()
 
@@ -315,6 +322,7 @@ def main():
     confidence_threshold = args.confidence_threshold
     cost_alpha = args.cost_alpha
     use_config_subjects = args.config_subjects
+    modes_to_test = args.modes
 
     dataset = args.dataset
     test_dir = f"data/{dataset}/test"
@@ -353,6 +361,18 @@ def main():
 
         if model_name is None:
             print(f"Skipping {checkpoint_path} - could not parse model/mode")
+            continue
+
+        # Skip modes based on --modes argument
+        if modes_to_test == "three_class" and mode == "binary":
+            print(
+                f"Skipping {checkpoint_path} - binary mode skipped (use --modes all to run)"
+            )
+            continue
+        if modes_to_test == "binary" and mode != "binary":
+            print(
+                f"Skipping {checkpoint_path} - three_class mode skipped (use --modes all to run)"
+            )
             continue
 
         print(f"Model: {model_name}, Mode: {mode}, Num classes: {num_classes}")

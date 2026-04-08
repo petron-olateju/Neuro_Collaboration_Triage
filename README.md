@@ -607,6 +607,8 @@ python test_and_collab.py --dataset nmt --confidence-threshold 0.9 --cost-alpha 
 | `--dataset` | Dataset name | `nmt` |
 | `--confidence-threshold` | Strategy A: defer if confidence below this | `0.85` |
 | `--cost-alpha` | Strategy B: defer if P(pathology) > this | `0.15` |
+| `--config-subjects` | Use abnormal subjects from config | `True` |
+| `--modes` | Which modes to test: binary, three_class, all | `three_class` |
 
 Results are saved to `experiments/experiment.yaml` with timestamp keys.
 
@@ -815,6 +817,9 @@ python test_and_collab_sweep.py --confidence-step 0.1 --cost-step 0.1
 | `--cost-start` | 0.0 | Cost alpha sweep start |
 | `--cost-end` | 1.0 | Cost alpha sweep end |
 | `--cost-step` | 0.05 | Cost alpha sweep step |
+| `--config-subjects` | True | Use abnormal subjects from config |
+| `--modes` | three_class | Which modes to test: binary, three_class, all |
+| `--include-fairness` | False | Compute fairness metrics at each sweep point |
 
 ### Output
 
@@ -826,6 +831,10 @@ Two YAML files are generated in `experiments/`:
 | `cost_alpha_sweep.yaml` | Results for cost alpha sweep (21 values) |
 
 Each file contains metrics (accuracy, precision, recall, f1, escalation_rate) for each parameter value.
+
+When `--include-fairness` is used, additional fairness metrics are included:
+- `baseline_fairness`: Fairness metrics for AI-only (baseline) predictions
+- Each sweep point includes `fairness` key with `overall`, `by_gender`, and `by_age_group`
 
 ```yaml
 # Example structure (confidence_threshold_sweep.yaml)
@@ -888,6 +897,7 @@ python test_and_collab_fairness.py --model googlenet --mode three_class --confid
 | `--model` | None | Model name (use with --mode) |
 | `--mode` | None | Mode (use with --model) |
 | `--config-subjects` | True | Use abnormal subjects from config for testing |
+| `--modes` | three_class | Which modes to test: binary, three_class, all |
 | `--debug` | False | Print debug information |
 
 ### Test Subject Selection
