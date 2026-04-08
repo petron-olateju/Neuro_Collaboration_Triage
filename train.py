@@ -20,7 +20,7 @@ import argparse
 import os
 import time
 from pathlib import Path
-from typing import Dict, List, Literal, Optional, Tuple
+from typing import Dict, List, Literal, Optional, Set, Tuple
 
 import numpy as np
 import torch
@@ -87,10 +87,12 @@ class EEGCWTDataset(Dataset):
         root_dir: str | Path,
         mode: str = "three_class",
         transform: Optional[transforms.Compose] = None,
+        subject_ids: Optional[Set[int]] = None,
     ) -> None:
         self.root_dir = Path(root_dir)
         self.mode = mode
         self.transform = transform
+        self.subject_ids = set(subject_ids) if subject_ids else None
 
         if mode == "binary":
             self.class_names = LABEL_CLASSES_2
@@ -118,6 +120,11 @@ class EEGCWTDataset(Dataset):
                 continue
             label = self.label_map[class_name]
             for img_path in class_dir.glob("*.png"):
+                # Extract subject_id from filename: "0000025_0_Normal.png" -> 25
+                subject_id = int(img_path.stem.split("_")[0])
+                # Filter by subject_ids if provided
+                if self.subject_ids is not None and subject_id not in self.subject_ids:
+                    continue
                 samples.append((img_path, label))
         return samples
 
@@ -510,15 +517,22 @@ if __name__ == "__main__":
         help="Generate dataset from EDF/CSV files",
     )
     parser.add_argument(
+        "--extra-test",
+        action="store_true",
+        help="Also generate data for abnormal EDF subjects not in config (for expanded testing)",
+    )
+    parser.add_argument(
         "--dataset",
         type=str,
         help="Dataset name from dataset_config.yaml (e.g., nmt, tuab)",
     )
 
     args = parser.parse_args()
+    extra_test = getattr(args, "extra_test", False)
 
     if args.preprocess:
         config = load_config(args.config)
+        extra_test = args.extra_test
 
         dataset_config_path = "configs/dataset_config.yaml"
         if not Path(dataset_config_path).exists():
@@ -553,6 +567,22 @@ if __name__ == "__main__":
                     f"Warning: Missing split IDs for dataset {dataset_name}, skipping"
                 )
                 continue
+
+            # Add extra test subjects if --extra-test is set
+            if extra_test:
+                # Get all abnormal EDF subjects with metadata
+                data_root_path = Path(data_root)
+                edf_abnormal_dir = data_root_path / "edf" / "Abnormal EDF Files"
+                if edf_abnormal_dir.exists():
+                    all_abnormal = set(
+                        int(f.stem) for f in edf_abnormal_dir.glob("*.edf")
+                    )
+                    # Add subjects not in any split (convert to sets first)
+                    all_split = set(train_ids) | set(valid_ids) | set(test_ids)
+                    extra_ids = list(all_abnormal - all_split)
+                    print(f"  Extra test subjects: {len(extra_ids)}")
+                    # Add extra IDs to test_ids for additional test data
+                    test_ids = list(set(test_ids) | set(extra_ids))
 
             output_root = f"data/{dataset_name}"
             print(f"Processing dataset: {dataset_name}")

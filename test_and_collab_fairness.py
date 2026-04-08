@@ -18,6 +18,59 @@ from utils.dataset_with_metadata import EEGCWTMetadataDataset, classify_age_grou
 DEFAULT_DATASET = "nmt"
 DEFAULT_CHECKPOINT_DIR = "checkpoints"
 DEFAULT_METADATA_CSV = "data/nmt_metadata.csv"
+DEFAULT_CONFIG = "configs/dataset_config.yaml"
+
+
+def get_config_split_subjects(config_path: str = DEFAULT_CONFIG, dataset: str = "nmt"):
+    """Read config file to get subjects in train/valid/test splits."""
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    train_ids = set()
+    for group in config["datasets"][dataset].get("train_subject_ids", []):
+        train_ids.update(group)
+
+    valid_ids = set()
+    for group in config["datasets"][dataset].get("valid_subject_ids", []):
+        valid_ids.update(group)
+
+    test_ids = set()
+    for group in config["datasets"][dataset].get("test_subject_ids", []):
+        test_ids.update(group)
+
+    return train_ids, valid_ids, test_ids
+
+
+def get_test_subjects_from_config(
+    config_path: str = DEFAULT_CONFIG, dataset: str = "nmt"
+):
+    """
+    Get test subjects from config file.
+    Uses abnormal EDF subjects NOT in train/valid splits + includes overlapping from test config.
+    """
+    train_ids, valid_ids, test_ids = get_config_split_subjects(config_path, dataset)
+
+    # Get all abnormal EDF subjects with metadata
+    edf_abnormal_dir = "eeg_data/Data/NMT_Events/edf/Abnormal EDF Files"
+    if not os.path.exists(edf_abnormal_dir):
+        return test_ids
+
+    abnormal_subjects = set(
+        int(f.replace(".edf", ""))
+        for f in os.listdir(edf_abnormal_dir)
+        if f.endswith(".edf")
+    )
+
+    # Filter out train + valid, keep test overlap
+    test_subjects_to_exclude = train_ids | valid_ids
+    available_for_test = abnormal_subjects - test_subjects_to_exclude
+
+    # Include overlapping subjects from test config
+    overlapping = abnormal_subjects & test_ids
+
+    final_test_subjects = available_for_test | overlapping
+
+    return final_test_subjects
 
 
 def apply_strategy_a(y_true, y_probs, confidence_threshold, metadata_list):
@@ -238,6 +291,12 @@ def main():
     parser.add_argument("--model", type=str)
     parser.add_argument("--mode", type=str)
     parser.add_argument("--debug", action="store_true", help="Print debug info")
+    parser.add_argument(
+        "--config-subjects",
+        action="store_true",
+        default=True,
+        help="Use abnormal subjects from config for testing (default: True)",
+    )
 
     args = parser.parse_args()
 
@@ -252,10 +311,12 @@ def main():
     confidence_threshold = args.confidence_threshold
     cost_alpha = args.cost_alpha
     debug = args.debug
+    use_config_subjects = args.config_subjects
 
     print(f"Dataset: {dataset}")
     print(f"Test dir: {test_dir}")
     print(f"Metadata CSV: {metadata_csv}")
+    print(f"Use config subjects: {use_config_subjects}")
 
     if not os.path.exists(metadata_csv):
         print(f"Error: Metadata CSV not found at {metadata_csv}")
@@ -310,14 +371,33 @@ def main():
             continue
 
         try:
+            # Get test subjects from config if flag is True
+            if use_config_subjects:
+                test_subject_ids = get_test_subjects_from_config(
+                    DEFAULT_CONFIG, dataset
+                )
+                print(f"Using {len(test_subject_ids)} config-based test subjects")
+            else:
+                test_subject_ids = None
+
             base_dataset = EEGCWTDataset(
-                test_dir, mode=mode, transform=transforms_dict["test"]
+                test_dir,
+                mode=mode,
+                transform=transforms_dict["test"],
+                subject_ids=test_subject_ids,
             )
             test_dataset = EEGCWTMetadataDataset(base_dataset, metadata_csv)
             test_loader = torch.utils.data.DataLoader(
                 test_dataset, batch_size=32, shuffle=False, num_workers=0
             )
-            print(f"Loaded test data: {len(test_dataset)} samples")
+            print(
+                f"Loaded test data: {len(test_dataset)} samples"
+                + (
+                    f" from {len(test_subject_ids)} subjects"
+                    if test_subject_ids
+                    else ""
+                )
+            )
         except Exception as e:
             print(f"Failed to load test data: {e}")
             continue

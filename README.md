@@ -537,6 +537,16 @@ This reads `configs/dataset_config.yaml` and generates images for all configured
 - `data/{dataset_name}/valid/`
 - `data/{dataset_name}/test/`
 
+**Generating Additional Test Data:**
+
+To also generate test data for abnormal EDF subjects NOT in the config splits (needed for full fairness testing):
+
+```bash
+python train.py --preprocess --extra-test
+```
+
+This adds 95 additional abnormal subjects to the test set, giving complete gender/age metadata coverage.
+
 **Note:** The `--dataset` name in commands maps directly to the subdirectory under `data/`. For example, `--dataset nmt` expects data in `data/nmt/train/` and `data/nmt/valid/`.
 
 ### Train a Model
@@ -877,6 +887,23 @@ python test_and_collab_fairness.py --model googlenet --mode three_class --confid
 | `--cost-alpha` | 0.15 | Strategy B threshold |
 | `--model` | None | Model name (use with --mode) |
 | `--mode` | None | Mode (use with --model) |
+| `--config-subjects` | True | Use abnormal subjects from config for testing |
+| `--debug` | False | Print debug information |
+
+### Test Subject Selection
+
+By default, test subjects are selected based on `configs/dataset_config.yaml`:
+
+1. **All abnormal EDF subjects** (from `eeg_data/Data/NMT_Events/edf/Abnormal EDF Files/`)
+2. **Exclude subjects** in train_subject_ids and valid_subject_ids from config
+3. **Include** subjects in test_subject_ids that are also abnormal (overlap)
+
+This ensures fair testing on subjects NOT seen during training, with valid gender/age metadata.
+
+To use all test folder data (legacy behavior):
+```bash
+python test_and_collab_fairness.py --config-subjects False
+```
 
 ### Output
 

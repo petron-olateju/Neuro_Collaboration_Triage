@@ -22,6 +22,45 @@ from train import EEGCWTDataset, create_model, get_default_transforms, load_conf
 EXPERIMENTS_FILE = "experiments/experiment.yaml"
 DEFAULT_DATASET = "nmt"
 DEFAULT_CHECKPOINT_DIR = "checkpoints"
+DEFAULT_CONFIG = "configs/dataset_config.yaml"
+
+
+def get_test_subjects_from_config(
+    config_path: str = DEFAULT_CONFIG, dataset: str = "nmt"
+):
+    """Get test subjects from config file (abnormal subjects not in train/valid + test overlap)."""
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    train_ids = set()
+    for group in config["datasets"][dataset].get("train_subject_ids", []):
+        train_ids.update(group)
+
+    valid_ids = set()
+    for group in config["datasets"][dataset].get("valid_subject_ids", []):
+        valid_ids.update(group)
+
+    test_ids = set()
+    for group in config["datasets"][dataset].get("test_subject_ids", []):
+        test_ids.update(group)
+
+    # Get all abnormal EDF subjects
+    edf_abnormal_dir = "eeg_data/Data/NMT_Events/edf/Abnormal EDF Files"
+    if not os.path.exists(edf_abnormal_dir):
+        return test_ids
+
+    abnormal_subjects = set(
+        int(f.replace(".edf", ""))
+        for f in os.listdir(edf_abnormal_dir)
+        if f.endswith(".edf")
+    )
+
+    # Filter out train + valid, keep test overlap
+    test_subjects_to_exclude = train_ids | valid_ids
+    available_for_test = abnormal_subjects - test_subjects_to_exclude
+    overlapping = abnormal_subjects & test_ids
+
+    return available_for_test | overlapping
 
 
 # --- COLLABORATION LOGIC ---
@@ -256,6 +295,12 @@ def main():
         default=0.15,
         help="Strategy B: defer to human if P(pathology) > this alpha (default: 0.15)",
     )
+    parser.add_argument(
+        "--config-subjects",
+        action="store_true",
+        default=True,
+        help="Use abnormal subjects from config for testing (default: True)",
+    )
 
     args = parser.parse_args()
 
@@ -269,6 +314,7 @@ def main():
     # Collaboration policy parameters from CLI
     confidence_threshold = args.confidence_threshold
     cost_alpha = args.cost_alpha
+    use_config_subjects = args.config_subjects
 
     dataset = args.dataset
     test_dir = f"data/{dataset}/test"
@@ -324,8 +370,19 @@ def main():
 
         # Load test dataset
         try:
+            if use_config_subjects:
+                test_subject_ids = get_test_subjects_from_config(
+                    DEFAULT_CONFIG, dataset
+                )
+                print(f"Using {len(test_subject_ids)} config-based test subjects")
+            else:
+                test_subject_ids = None
+
             test_dataset = EEGCWTDataset(
-                test_dir, mode=mode, transform=transforms_dict["test"]
+                test_dir,
+                mode=mode,
+                transform=transforms_dict["test"],
+                subject_ids=test_subject_ids,
             )
             test_loader = torch.utils.data.DataLoader(
                 test_dataset, batch_size=32, shuffle=False, num_workers=4
