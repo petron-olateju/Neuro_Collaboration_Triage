@@ -96,9 +96,6 @@ def compute_group_metrics(df, group_key):
     for group_name, group_df in df.groupby(group_key):
         group_key_str = str(group_name)
 
-        if group_key_str == "unknown":
-            continue
-
         y_true = group_df["y_true"].values
         y_pred = group_df["y_pred"].values
         decisions = group_df["decision"].values

@@ -28,8 +28,9 @@ class EEGCWTMetadataDataset(Dataset):
         self.base_dataset = base_dataset
         self.metadata_df = pd.read_csv(metadata_csv)
 
-        # Set subject_id as index for faster lookup
+        # Set subject_id as index (convert to int to handle both formats)
         if "subject_id" in self.metadata_df.columns:
+            self.metadata_df["subject_id"] = self.metadata_df["subject_id"].astype(int)
             self.metadata_df = self.metadata_df.set_index("subject_id")
 
     def __len__(self):
@@ -54,9 +55,16 @@ class EEGCWTMetadataDataset(Dataset):
         except ValueError:
             subject_id_int = -1
 
-        # Get metadata from CSV
-        if subject_id_int in self.metadata_df.index:
-            meta = self.metadata_df.loc[subject_id_int]
+        # Get metadata from CSV - handle both int and string index
+        try:
+            if subject_id_int in self.metadata_df.index:
+                meta = self.metadata_df.loc[subject_id_int]
+            else:
+                meta = None
+        except KeyError:
+            meta = None
+
+        if meta is not None and not pd.isna(meta).all():
             gender = str(meta.get("gender", "unknown"))
             age = int(meta.get("age", -1))
         else:
