@@ -22,6 +22,9 @@ A PyTorch-based deep learning pipeline for EEG anomaly classification using CWT 
 11. [Collaboration Analysis](#collaboration-analysis)
 12. [Collaboration Parameter Sweep](#collaboration-parameter-sweep)
 13. [Fairness Analysis](#fairness-analysis)
+14. [Budget-Risk Analysis](#budget-risk-analysis)
+15. [Budget-Risk Sweep Analysis](#budget-risk-sweep-analysis)
+16. [Transparency Analysis](#transparency-analysis)
 
 ---
 
@@ -1121,6 +1124,97 @@ budget_risk_sweep:
           0.1:
             ...
 ```
+
+---
+
+## Transparency Analysis
+
+Script: `run_transparency.py`
+
+Module: `utils/transparency_module.py`
+
+Generates interpretability heatmaps showing which time-frequency regions contribute to AI uncertainty for abnormal samples.
+
+### Core Functions
+
+| Function | Description |
+|----------|-------------|
+| `generate_transparency_report()` | Main function that scans test samples, identifies uncertain ones, and generates visualizations |
+| `compute_class_difference_attribution()` | Uses Integrated Gradients to compute Abnormal - Normal attribution |
+| `compute_uncertainty_attribution()` | Uses gradient magnitude to identify regions of model confusion |
+| `create_visualization()` | Creates heatmap overlay on scalogram image |
+| `create_comparison_visualization()` | Creates side-by-side comparison of both attribution methods |
+
+### How It Works
+
+1. **Identify uncertain samples**: Filter test samples where AI confidence < threshold
+2. **Compute attributions**: For each uncertain sample, calculate:
+   - **Class Difference** (Abnormal - Normal): Regions associated with abnormal patterns
+   - **Uncertainty**: Regions where model is confused
+3. **Generate heatmaps**: Visual overlays showing high-risk areas
+
+### Attribution Methods
+
+| Method | What It Shows | Technique | Clinical Use |
+|--------|---------------|-----------|---------------|
+| **class_diff** | Regions pushing toward abnormal classification | Integrated Gradients (Captum) | "Look here for spikes/slowing" |
+| **uncertainty** | Regions model is confused about | Gradient magnitude | "Model unsure about this area" |
+| **both** | Side-by-side comparison | Both methods | Compare both perspectives |
+
+### Usage
+
+```bash
+# Default settings (15 samples, confidence < 0.5)
+python run_transparency.py --checkpoint checkpoints/nmt_resnet18_three_class_best.pt
+
+# Custom settings
+python run_transparency.py \
+    --checkpoint checkpoints/nmt_resnet18_three_class_best.pt \
+    --confidence 0.6 \
+    --num-samples 20 \
+    --methods both
+```
+
+### CLI Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--checkpoint` | Required | Path to model checkpoint |
+| `--checkpoint-dir` | `checkpoints` | Directory for auto-discovery |
+| `--dataset` | `nmt` | Dataset name |
+| `--confidence` | 0.5 | Uncertainty threshold (samples below this are uncertain) |
+| `--num-samples` | 15 | Number of heatmaps to generate |
+| `--max-samples-scan` | 5000 | Maximum samples to scan before stopping |
+| `--limit-samples` | None | Limit samples loaded (for memory-limited environments) |
+| `--methods` | both | class_diff, uncertainty, or both |
+| `--output` | `experiments/transparency/` | Output directory |
+| `--mode` | three_class | Model mode |
+| `--modes` | three_class | Which modes to process |
+| `--config-subjects` | True | Use config-based test subjects |
+
+### Output Structure
+
+```
+experiments/transparency/
+├── nmt_resnet18_three_class/
+│   ├── class_difference/
+│   │   ├── sample_001_uncertain.png
+│   │   └── ...
+│   ├── uncertainty/
+│   │   ├── sample_001_uncertain.png
+│   │   └── ...
+│   ├── comparison/
+│   │   ├── sample_001_both.png
+│   │   └── ...
+│   └── metadata.json
+```
+
+### Sample Metadata
+
+Each run saves metadata.json with:
+- Confidence threshold used
+- Number of samples scanned and processed
+- Per-sample info: index, true_label, prediction, confidence, subject_id, gender, age
 
 ---
 

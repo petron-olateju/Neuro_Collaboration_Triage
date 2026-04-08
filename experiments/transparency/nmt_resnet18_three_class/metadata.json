@@ -1,0 +1,30 @@
+{
+  "confidence_threshold": 0.7,
+  "num_samples_requested": 15,
+  "num_samples_scanned": 20,
+  "num_samples_generated": 2,
+  "samples": [
+    {
+      "batch_idx": 0,
+      "sample_in_batch": 17,
+      "index": 17,
+      "true_label": 1,
+      "prediction": 1,
+      "confidence": 0.5231,
+      "subject_id": "0000247",
+      "gender": "Male",
+      "age": 6
+    },
+    {
+      "batch_idx": 0,
+      "sample_in_batch": 18,
+      "index": 18,
+      "true_label": 1,
+      "prediction": 0,
+      "confidence": 0.6974,
+      "subject_id": "0000247",
+      "gender": "Male",
+      "age": 6
+    }
+  ]
+}

@@ -88,11 +88,13 @@ class EEGCWTDataset(Dataset):
         mode: str = "three_class",
         transform: Optional[transforms.Compose] = None,
         subject_ids: Optional[Set[int]] = None,
+        limit_samples: Optional[int] = None,
     ) -> None:
         self.root_dir = Path(root_dir)
         self.mode = mode
         self.transform = transform
         self.subject_ids = set(subject_ids) if subject_ids else None
+        self.limit_samples = limit_samples
 
         if mode == "binary":
             self.class_names = LABEL_CLASSES_2
@@ -126,6 +128,11 @@ class EEGCWTDataset(Dataset):
                 if self.subject_ids is not None and subject_id not in self.subject_ids:
                     continue
                 samples.append((img_path, label))
+
+        # Apply sample limit if specified
+        if self.limit_samples is not None and len(samples) > self.limit_samples:
+            samples = samples[: self.limit_samples]
+
         return samples
 
     def __len__(self) -> int:
