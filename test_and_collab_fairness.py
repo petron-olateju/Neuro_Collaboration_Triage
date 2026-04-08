@@ -259,7 +259,19 @@ def run_inference_with_metadata(model, dataloader, device):
             all_images.append(images.cpu())
             all_labels.append(labels)
             all_probs.append(probs)
-            all_metadata.extend(metadata)
+
+            batch_size = labels.shape[0]
+            for j in range(batch_size):
+                age_j = metadata["age"][j]
+                if hasattr(age_j, "item"):
+                    age_j = age_j.item()
+                all_metadata.append(
+                    {
+                        "subject_id": metadata["subject_id"][j],
+                        "gender": metadata["gender"][j],
+                        "age": age_j,
+                    }
+                )
 
     y_true = torch.cat(all_labels)
     y_probs = torch.cat(all_probs)
