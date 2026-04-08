@@ -1,135 +1,3 @@
-nmt_resnet18_binary:
-  model: resnet18
-  mode: binary
-  num_classes: 2
-  sweeps:
-    confidence_threshold:
-      0.0:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.05:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.1:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.15:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.2:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.25:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.3:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.35:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.4:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.45:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.5:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.55:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.6:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.65:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.7:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.75:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.8:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.85:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.9:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.95:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      1.0:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 100.0
 nmt_resnet18_three_class:
   model: resnet18
   mode: three
@@ -137,263 +5,878 @@ nmt_resnet18_three_class:
   sweeps:
     confidence_threshold:
       0.0:
-        accuracy: 0.5589
-        precision: 0.5875
-        recall: 0.5589
-        f1: 0.55
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.1757
+          precision: 0.5716
+          recall: 0.1757
+          f1: 0.2684
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.1757
+            f1: 0.2684
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.0974
+              f1: 0.1719
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2039
+              f1: 0.2955
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0642
+              f1: 0.0962
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.219
+              f1: 0.3298
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.05:
-        accuracy: 0.5589
-        precision: 0.5875
-        recall: 0.5589
-        f1: 0.55
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.1757
+          precision: 0.5716
+          recall: 0.1757
+          f1: 0.2684
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.1757
+            f1: 0.2684
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.0974
+              f1: 0.1719
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2039
+              f1: 0.2955
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0642
+              f1: 0.0962
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.219
+              f1: 0.3298
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.1:
-        accuracy: 0.5589
-        precision: 0.5875
-        recall: 0.5589
-        f1: 0.55
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.1757
+          precision: 0.5716
+          recall: 0.1757
+          f1: 0.2684
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.1757
+            f1: 0.2684
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.0974
+              f1: 0.1719
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2039
+              f1: 0.2955
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0642
+              f1: 0.0962
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.219
+              f1: 0.3298
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.15:
-        accuracy: 0.5589
-        precision: 0.5875
-        recall: 0.5589
-        f1: 0.55
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.1757
+          precision: 0.5716
+          recall: 0.1757
+          f1: 0.2684
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.1757
+            f1: 0.2684
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.0974
+              f1: 0.1719
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2039
+              f1: 0.2955
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0642
+              f1: 0.0962
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.219
+              f1: 0.3298
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.2:
-        accuracy: 0.5589
-        precision: 0.5875
-        recall: 0.5589
-        f1: 0.55
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.1757
+          precision: 0.5716
+          recall: 0.1757
+          f1: 0.2684
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.1757
+            f1: 0.2684
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.0974
+              f1: 0.1719
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2039
+              f1: 0.2955
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0642
+              f1: 0.0962
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.219
+              f1: 0.3298
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.25:
-        accuracy: 0.5589
-        precision: 0.5875
-        recall: 0.5589
-        f1: 0.55
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.1757
+          precision: 0.5716
+          recall: 0.1757
+          f1: 0.2684
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.1757
+            f1: 0.2684
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.0974
+              f1: 0.1719
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2039
+              f1: 0.2955
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0642
+              f1: 0.0962
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.219
+              f1: 0.3298
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.3:
-        accuracy: 0.5589
-        precision: 0.5875
-        recall: 0.5589
-        f1: 0.55
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.1757
+          precision: 0.5716
+          recall: 0.1757
+          f1: 0.2684
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.1757
+            f1: 0.2684
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.0974
+              f1: 0.1719
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2039
+              f1: 0.2955
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0642
+              f1: 0.0962
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.219
+              f1: 0.3298
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.35:
-        accuracy: 0.5594
-        precision: 0.5881
-        recall: 0.5594
-        f1: 0.5507
-        escalation_rate: 0.1
+        metrics:
+          accuracy: 0.1766
+          precision: 0.5728
+          recall: 0.1766
+          f1: 0.2696
+          escalation_rate: 0.11
+        fairness:
+          overall:
+            accuracy: 0.1766
+            f1: 0.2696
+            escalation_rate: 0.11
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.0984
+              f1: 0.1735
+              escalation_rate: 0.13
+              sample_count: 39658
+            Male:
+              accuracy: 0.2048
+              f1: 0.2965
+              escalation_rate: 0.11
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0643
+              f1: 0.0965
+              escalation_rate: 0.04
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2202
+              f1: 0.3313
+              escalation_rate: 0.14
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.4:
-        accuracy: 0.5693
-        precision: 0.5989
-        recall: 0.5693
-        f1: 0.5613
-        escalation_rate: 1.66
+        metrics:
+          accuracy: 0.1866
+          precision: 0.5873
+          recall: 0.1866
+          f1: 0.2829
+          escalation_rate: 1.5
+        fairness:
+          overall:
+            accuracy: 0.1866
+            f1: 0.2829
+            escalation_rate: 1.5
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1056
+              f1: 0.1855
+              escalation_rate: 1.34
+              sample_count: 39658
+            Male:
+              accuracy: 0.2158
+              f1: 0.3098
+              escalation_rate: 1.56
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.068
+              f1: 0.1037
+              escalation_rate: 0.63
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2326
+              f1: 0.3466
+              escalation_rate: 1.85
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.45:
-        accuracy: 0.5834
-        precision: 0.6146
-        recall: 0.5834
-        f1: 0.5763
-        escalation_rate: 4.23
+        metrics:
+          accuracy: 0.2024
+          precision: 0.6083
+          recall: 0.2024
+          f1: 0.3035
+          escalation_rate: 3.75
+        fairness:
+          overall:
+            accuracy: 0.2024
+            f1: 0.3035
+            escalation_rate: 3.75
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1138
+              f1: 0.199
+              escalation_rate: 2.74
+              sample_count: 39658
+            Male:
+              accuracy: 0.2343
+              f1: 0.3315
+              escalation_rate: 4.12
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0738
+              f1: 0.1147
+              escalation_rate: 1.55
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2522
+              f1: 0.3707
+              escalation_rate: 4.62
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.5:
-        accuracy: 0.6024
-        precision: 0.6354
-        recall: 0.6024
-        f1: 0.5964
-        escalation_rate: 7.62
+        metrics:
+          accuracy: 0.2252
+          precision: 0.6361
+          recall: 0.2252
+          f1: 0.3327
+          escalation_rate: 6.98
+        fairness:
+          overall:
+            accuracy: 0.2252
+            f1: 0.3327
+            escalation_rate: 6.98
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1253
+              f1: 0.2175
+              escalation_rate: 4.64
+              sample_count: 39658
+            Male:
+              accuracy: 0.2613
+              f1: 0.3622
+              escalation_rate: 7.82
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0809
+              f1: 0.128
+              escalation_rate: 2.52
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2811
+              f1: 0.4056
+              escalation_rate: 8.71
+              sample_count: 110109
+            senior:
+              accuracy: 0.0
+              f1: 0.0
+              escalation_rate: 0.0
+              sample_count: 5397
       0.55:
-        accuracy: 0.6432
-        precision: 0.6818
-        recall: 0.6432
-        f1: 0.6375
-        escalation_rate: 15.19
+        metrics:
+          accuracy: 0.2772
+          precision: 0.7013
+          recall: 0.2772
+          f1: 0.3967
+          escalation_rate: 13.77
+        fairness:
+          overall:
+            accuracy: 0.2772
+            f1: 0.3967
+            escalation_rate: 13.77
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1512
+              f1: 0.2573
+              escalation_rate: 8.64
+              sample_count: 39658
+            Male:
+              accuracy: 0.3227
+              f1: 0.4297
+              escalation_rate: 15.62
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1043
+              f1: 0.1694
+              escalation_rate: 5.46
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3445
+              f1: 0.4791
+              escalation_rate: 17.02
+              sample_count: 110109
+            senior:
+              accuracy: 0.0011
+              f1: 0.0022
+              escalation_rate: 0.11
+              sample_count: 5397
       0.6:
-        accuracy: 0.7148
-        precision: 0.7952
-        recall: 0.7148
-        f1: 0.7078
-        escalation_rate: 29.57
+        metrics:
+          accuracy: 0.3682
+          precision: 0.9249
+          recall: 0.3682
+          f1: 0.5014
+          escalation_rate: 24.4
+        fairness:
+          overall:
+            accuracy: 0.3682
+            f1: 0.5014
+            escalation_rate: 24.4
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1811
+              f1: 0.3008
+              escalation_rate: 13.02
+              sample_count: 39658
+            Male:
+              accuracy: 0.4356
+              f1: 0.542
+              escalation_rate: 28.49
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1268
+              f1: 0.2079
+              escalation_rate: 8.16
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.461
+              f1: 0.6099
+              escalation_rate: 30.62
+              sample_count: 110109
+            senior:
+              accuracy: 0.0022
+              f1: 0.0044
+              escalation_rate: 0.22
+              sample_count: 5397
       0.65:
-        accuracy: 0.7322
-        precision: 0.8109
-        recall: 0.7322
-        f1: 0.7248
-        escalation_rate: 33.15
+        metrics:
+          accuracy: 0.397
+          precision: 0.948
+          recall: 0.397
+          f1: 0.5351
+          escalation_rate: 28.42
+        fairness:
+          overall:
+            accuracy: 0.397
+            f1: 0.5351
+            escalation_rate: 28.42
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.2114
+              f1: 0.3426
+              escalation_rate: 16.83
+              sample_count: 39658
+            Male:
+              accuracy: 0.4639
+              f1: 0.5736
+              escalation_rate: 32.6
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1538
+              f1: 0.2514
+              escalation_rate: 11.27
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.4917
+              f1: 0.6409
+              escalation_rate: 35.11
+              sample_count: 110109
+            senior:
+              accuracy: 0.0061
+              f1: 0.0122
+              escalation_rate: 0.61
+              sample_count: 5397
       0.7:
-        accuracy: 0.7479
-        precision: 0.8222
-        recall: 0.7479
-        f1: 0.74
-        escalation_rate: 36.44
+        metrics:
+          accuracy: 0.4252
+          precision: 0.9546
+          recall: 0.4252
+          f1: 0.566
+          escalation_rate: 32.32
+        fairness:
+          overall:
+            accuracy: 0.4252
+            f1: 0.566
+            escalation_rate: 32.32
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.2472
+              f1: 0.3896
+              escalation_rate: 21.27
+              sample_count: 39658
+            Male:
+              accuracy: 0.4894
+              f1: 0.6007
+              escalation_rate: 36.31
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1787
+              f1: 0.2897
+              escalation_rate: 14.22
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.5223
+              f1: 0.6696
+              escalation_rate: 39.5
+              sample_count: 110109
+            senior:
+              accuracy: 0.0067
+              f1: 0.0133
+              escalation_rate: 0.67
+              sample_count: 5397
       0.75:
-        accuracy: 0.7657
-        precision: 0.8349
-        recall: 0.7657
-        f1: 0.7577
-        escalation_rate: 40.04
+        metrics:
+          accuracy: 0.4587
+          precision: 0.9614
+          recall: 0.4587
+          f1: 0.601
+          escalation_rate: 36.62
+        fairness:
+          overall:
+            accuracy: 0.4587
+            f1: 0.601
+            escalation_rate: 36.62
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.2938
+              f1: 0.4472
+              escalation_rate: 26.48
+              sample_count: 39658
+            Male:
+              accuracy: 0.5181
+              f1: 0.6306
+              escalation_rate: 40.27
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.21
+              f1: 0.3357
+              escalation_rate: 17.77
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.558
+              f1: 0.7014
+              escalation_rate: 44.23
+              sample_count: 110109
+            senior:
+              accuracy: 0.0078
+              f1: 0.0154
+              escalation_rate: 0.78
+              sample_count: 5397
       0.8:
-        accuracy: 0.7842
-        precision: 0.8473
-        recall: 0.7842
-        f1: 0.7763
-        escalation_rate: 43.79
+        metrics:
+          accuracy: 0.4948
+          precision: 0.9677
+          recall: 0.4948
+          f1: 0.6374
+          escalation_rate: 41.45
+        fairness:
+          overall:
+            accuracy: 0.4948
+            f1: 0.6374
+            escalation_rate: 41.45
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.3452
+              f1: 0.5063
+              escalation_rate: 32.25
+              sample_count: 39658
+            Male:
+              accuracy: 0.5488
+              f1: 0.6621
+              escalation_rate: 44.77
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.2488
+              f1: 0.3892
+              escalation_rate: 22.15
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.595
+              f1: 0.733
+              escalation_rate: 49.43
+              sample_count: 110109
+            senior:
+              accuracy: 0.0106
+              f1: 0.0209
+              escalation_rate: 1.06
+              sample_count: 5397
       0.85:
-        accuracy: 0.8
-        precision: 0.8586
-        recall: 0.8
-        f1: 0.7922
-        escalation_rate: 47.96
+        metrics:
+          accuracy: 0.5409
+          precision: 0.9746
+          recall: 0.5409
+          f1: 0.6809
+          escalation_rate: 47.25
+        fairness:
+          overall:
+            accuracy: 0.5409
+            f1: 0.6809
+            escalation_rate: 47.25
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.417
+              f1: 0.5821
+              escalation_rate: 39.97
+              sample_count: 39658
+            Male:
+              accuracy: 0.5856
+              f1: 0.698
+              escalation_rate: 49.88
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.2914
+              f1: 0.4446
+              escalation_rate: 26.89
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.6441
+              f1: 0.7725
+              escalation_rate: 55.81
+              sample_count: 110109
+            senior:
+              accuracy: 0.0167
+              f1: 0.0328
+              escalation_rate: 1.67
+              sample_count: 5397
       0.9:
-        accuracy: 0.8209
-        precision: 0.8733
-        recall: 0.8209
-        f1: 0.8136
-        escalation_rate: 53.56
+        metrics:
+          accuracy: 0.5977
+          precision: 0.981
+          recall: 0.5977
+          f1: 0.7307
+          escalation_rate: 54.39
+        fairness:
+          overall:
+            accuracy: 0.5977
+            f1: 0.7307
+            escalation_rate: 54.39
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.5083
+              f1: 0.6681
+              escalation_rate: 49.66
+              sample_count: 39658
+            Male:
+              accuracy: 0.6299
+              f1: 0.7386
+              escalation_rate: 56.09
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.3472
+              f1: 0.511
+              escalation_rate: 33.11
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.7034
+              f1: 0.817
+              escalation_rate: 63.53
+              sample_count: 110109
+            senior:
+              accuracy: 0.0283
+              f1: 0.0551
+              escalation_rate: 2.83
+              sample_count: 5397
       0.95:
-        accuracy: 0.8507
-        precision: 0.8932
-        recall: 0.8507
-        f1: 0.8446
-        escalation_rate: 61.67
+        metrics:
+          accuracy: 0.6788
+          precision: 0.9884
+          recall: 0.6788
+          f1: 0.7963
+          escalation_rate: 64.66
+        fairness:
+          overall:
+            accuracy: 0.6788
+            f1: 0.7963
+            escalation_rate: 64.66
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.6455
+              f1: 0.7803
+              escalation_rate: 63.98
+              sample_count: 39658
+            Male:
+              accuracy: 0.6908
+              f1: 0.7924
+              escalation_rate: 64.9
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.435
+              f1: 0.6045
+              escalation_rate: 42.6
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.7848
+              f1: 0.8734
+              escalation_rate: 74.38
+              sample_count: 110109
+            senior:
+              accuracy: 0.0611
+              f1: 0.1152
+              escalation_rate: 6.11
+              sample_count: 5397
       1.0:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 100.0
-nmt_vgg11_binary:
-  model: vgg11
-  mode: binary
-  num_classes: 2
-  sweeps:
-    confidence_threshold:
-      0.0:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        metrics:
+          accuracy: 0.9999
+          precision: 1.0
+          recall: 0.9999
+          f1: 1.0
+          escalation_rate: 99.99
+        fairness:
+          overall:
+            accuracy: 0.9999
+            f1: 1.0
+            escalation_rate: 99.99
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.9998
+              f1: 0.9999
+              escalation_rate: 99.98
+              sample_count: 39658
+            Male:
+              accuracy: 1.0
+              f1: 1.0
+              escalation_rate: 100.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 1.0
+              f1: 1.0
+              escalation_rate: 100.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.9999
+              f1: 1.0
+              escalation_rate: 99.99
+              sample_count: 110109
+            senior:
+              accuracy: 0.9994
+              f1: 0.9997
+              escalation_rate: 99.94
+              sample_count: 5397
+  baseline_fairness:
+    overall:
+      accuracy: 0.1757
+      f1: 0.2684
+      escalation_rate: 0.0
+      sample_count: 149697
+    by_gender:
+      Female:
+        accuracy: 0.0974
+        f1: 0.1719
         escalation_rate: 0.0
-      0.05:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        sample_count: 39658
+      Male:
+        accuracy: 0.2039
+        f1: 0.2955
         escalation_rate: 0.0
-      0.1:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        sample_count: 110039
+    by_age_group:
+      adult:
+        accuracy: 0.0642
+        f1: 0.0962
         escalation_rate: 0.0
-      0.15:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        sample_count: 34191
+      pediatric:
+        accuracy: 0.219
+        f1: 0.3298
         escalation_rate: 0.0
-      0.2:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        sample_count: 110109
+      senior:
+        accuracy: 0.0
+        f1: 0.0
         escalation_rate: 0.0
-      0.25:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.3:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.35:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.4:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.45:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.5:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.55:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.6:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.65:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.7:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.75:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.8:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.85:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.9:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.95:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      1.0:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
+        sample_count: 5397
 nmt_vgg11_three_class:
   model: vgg11
   mode: three
@@ -401,263 +884,878 @@ nmt_vgg11_three_class:
   sweeps:
     confidence_threshold:
       0.0:
-        accuracy: 0.5418
-        precision: 0.5615
-        recall: 0.5418
-        f1: 0.5396
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2199
+          precision: 0.5963
+          recall: 0.2199
+          f1: 0.3213
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2199
+            f1: 0.3213
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1038
+              f1: 0.1815
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2618
+              f1: 0.3569
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0876
+              f1: 0.1217
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2715
+              f1: 0.3911
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.005
+              f1: 0.01
+              escalation_rate: 0.0
+              sample_count: 5397
       0.05:
-        accuracy: 0.5418
-        precision: 0.5615
-        recall: 0.5418
-        f1: 0.5396
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2199
+          precision: 0.5963
+          recall: 0.2199
+          f1: 0.3213
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2199
+            f1: 0.3213
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1038
+              f1: 0.1815
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2618
+              f1: 0.3569
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0876
+              f1: 0.1217
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2715
+              f1: 0.3911
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.005
+              f1: 0.01
+              escalation_rate: 0.0
+              sample_count: 5397
       0.1:
-        accuracy: 0.5418
-        precision: 0.5615
-        recall: 0.5418
-        f1: 0.5396
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2199
+          precision: 0.5963
+          recall: 0.2199
+          f1: 0.3213
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2199
+            f1: 0.3213
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1038
+              f1: 0.1815
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2618
+              f1: 0.3569
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0876
+              f1: 0.1217
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2715
+              f1: 0.3911
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.005
+              f1: 0.01
+              escalation_rate: 0.0
+              sample_count: 5397
       0.15:
-        accuracy: 0.5418
-        precision: 0.5615
-        recall: 0.5418
-        f1: 0.5396
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2199
+          precision: 0.5963
+          recall: 0.2199
+          f1: 0.3213
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2199
+            f1: 0.3213
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1038
+              f1: 0.1815
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2618
+              f1: 0.3569
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0876
+              f1: 0.1217
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2715
+              f1: 0.3911
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.005
+              f1: 0.01
+              escalation_rate: 0.0
+              sample_count: 5397
       0.2:
-        accuracy: 0.5418
-        precision: 0.5615
-        recall: 0.5418
-        f1: 0.5396
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2199
+          precision: 0.5963
+          recall: 0.2199
+          f1: 0.3213
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2199
+            f1: 0.3213
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1038
+              f1: 0.1815
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2618
+              f1: 0.3569
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0876
+              f1: 0.1217
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2715
+              f1: 0.3911
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.005
+              f1: 0.01
+              escalation_rate: 0.0
+              sample_count: 5397
       0.25:
-        accuracy: 0.5418
-        precision: 0.5615
-        recall: 0.5418
-        f1: 0.5396
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2199
+          precision: 0.5963
+          recall: 0.2199
+          f1: 0.3213
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2199
+            f1: 0.3213
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1038
+              f1: 0.1815
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2618
+              f1: 0.3569
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0876
+              f1: 0.1217
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2715
+              f1: 0.3911
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.005
+              f1: 0.01
+              escalation_rate: 0.0
+              sample_count: 5397
       0.3:
-        accuracy: 0.5418
-        precision: 0.5615
-        recall: 0.5418
-        f1: 0.5396
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2199
+          precision: 0.5963
+          recall: 0.2199
+          f1: 0.3213
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2199
+            f1: 0.3213
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1038
+              f1: 0.1815
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2618
+              f1: 0.3569
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0876
+              f1: 0.1217
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2715
+              f1: 0.3911
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.005
+              f1: 0.01
+              escalation_rate: 0.0
+              sample_count: 5397
       0.35:
-        accuracy: 0.5433
-        precision: 0.563
-        recall: 0.5433
-        f1: 0.5413
-        escalation_rate: 0.31
+        metrics:
+          accuracy: 0.2212
+          precision: 0.5977
+          recall: 0.2212
+          f1: 0.3228
+          escalation_rate: 0.18
+        fairness:
+          overall:
+            accuracy: 0.2212
+            f1: 0.3228
+            escalation_rate: 0.18
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1042
+              f1: 0.1823
+              escalation_rate: 0.07
+              sample_count: 39658
+            Male:
+              accuracy: 0.2633
+              f1: 0.3586
+              escalation_rate: 0.22
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.0881
+              f1: 0.1227
+              escalation_rate: 0.06
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.2731
+              f1: 0.3929
+              escalation_rate: 0.23
+              sample_count: 110109
+            senior:
+              accuracy: 0.005
+              f1: 0.01
+              escalation_rate: 0.0
+              sample_count: 5397
       0.4:
-        accuracy: 0.5918
-        precision: 0.6069
-        recall: 0.5918
-        f1: 0.5918
-        escalation_rate: 7.52
+        metrics:
+          accuracy: 0.2533
+          precision: 0.6332
+          recall: 0.2533
+          f1: 0.3619
+          escalation_rate: 4.31
+        fairness:
+          overall:
+            accuracy: 0.2533
+            f1: 0.3619
+            escalation_rate: 4.31
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1197
+              f1: 0.2066
+              escalation_rate: 2.57
+              sample_count: 39658
+            Male:
+              accuracy: 0.3015
+              f1: 0.3996
+              escalation_rate: 4.94
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.096
+              f1: 0.1368
+              escalation_rate: 1.42
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3142
+              f1: 0.4394
+              escalation_rate: 5.4
+              sample_count: 110109
+            senior:
+              accuracy: 0.0078
+              f1: 0.0154
+              escalation_rate: 0.44
+              sample_count: 5397
       0.45:
-        accuracy: 0.6575
-        precision: 0.6663
-        recall: 0.6575
-        f1: 0.6585
-        escalation_rate: 16.64
+        metrics:
+          accuracy: 0.3009
+          precision: 0.6882
+          recall: 0.3009
+          f1: 0.4181
+          escalation_rate: 10.06
+        fairness:
+          overall:
+            accuracy: 0.3009
+            f1: 0.4181
+            escalation_rate: 10.06
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1477
+              f1: 0.2481
+              escalation_rate: 6.24
+              sample_count: 39658
+            Male:
+              accuracy: 0.3561
+              f1: 0.4563
+              escalation_rate: 11.43
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1092
+              f1: 0.1596
+              escalation_rate: 3.18
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3747
+              f1: 0.5051
+              escalation_rate: 12.64
+              sample_count: 110109
+            senior:
+              accuracy: 0.0111
+              f1: 0.022
+              escalation_rate: 0.89
+              sample_count: 5397
       0.5:
-        accuracy: 0.7277
-        precision: 0.7305
-        recall: 0.7277
-        f1: 0.7282
-        escalation_rate: 27.27
+        metrics:
+          accuracy: 0.3673
+          precision: 0.7686
+          recall: 0.3673
+          f1: 0.4933
+          escalation_rate: 18.28
+        fairness:
+          overall:
+            accuracy: 0.3673
+            f1: 0.4933
+            escalation_rate: 18.28
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1967
+              f1: 0.3149
+              escalation_rate: 12.53
+              sample_count: 39658
+            Male:
+              accuracy: 0.4287
+              f1: 0.5282
+              escalation_rate: 20.36
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1322
+              f1: 0.1995
+              escalation_rate: 5.99
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.4575
+              f1: 0.5914
+              escalation_rate: 22.93
+              sample_count: 110109
+            senior:
+              accuracy: 0.015
+              f1: 0.0296
+              escalation_rate: 1.39
+              sample_count: 5397
       0.55:
-        accuracy: 0.8133
-        precision: 0.8139
-        recall: 0.8133
-        f1: 0.8135
-        escalation_rate: 41.46
+        metrics:
+          accuracy: 0.4532
+          precision: 0.882
+          recall: 0.4532
+          f1: 0.5869
+          escalation_rate: 28.91
+        fairness:
+          overall:
+            accuracy: 0.4532
+            f1: 0.5869
+            escalation_rate: 28.91
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.2586
+              f1: 0.3935
+              escalation_rate: 20.54
+              sample_count: 39658
+            Male:
+              accuracy: 0.5233
+              f1: 0.6207
+              escalation_rate: 31.93
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.181
+              f1: 0.2787
+              escalation_rate: 11.55
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.5589
+              f1: 0.6924
+              escalation_rate: 35.62
+              sample_count: 110109
+            senior:
+              accuracy: 0.0211
+              f1: 0.0414
+              escalation_rate: 2.11
+              sample_count: 5397
       0.6:
-        accuracy: 0.8811
-        precision: 0.8842
-        recall: 0.8811
-        f1: 0.8817
-        escalation_rate: 53.8
+        metrics:
+          accuracy: 0.519
+          precision: 0.9475
+          recall: 0.519
+          f1: 0.6549
+          escalation_rate: 37.2
+        fairness:
+          overall:
+            accuracy: 0.519
+            f1: 0.6549
+            escalation_rate: 37.2
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.3264
+              f1: 0.4733
+              escalation_rate: 28.41
+              sample_count: 39658
+            Male:
+              accuracy: 0.5885
+              f1: 0.6856
+              escalation_rate: 40.36
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.2362
+              f1: 0.3607
+              escalation_rate: 17.74
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.6307
+              f1: 0.7585
+              escalation_rate: 44.9
+              sample_count: 110109
+            senior:
+              accuracy: 0.0322
+              f1: 0.0625
+              escalation_rate: 3.22
+              sample_count: 5397
       0.65:
-        accuracy: 0.9143
-        precision: 0.916
-        recall: 0.9143
-        f1: 0.9144
-        escalation_rate: 59.5
+        metrics:
+          accuracy: 0.5696
+          precision: 0.9595
+          recall: 0.5696
+          f1: 0.7021
+          escalation_rate: 43.87
+        fairness:
+          overall:
+            accuracy: 0.5696
+            f1: 0.7021
+            escalation_rate: 43.87
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.4051
+              f1: 0.5594
+              escalation_rate: 37.32
+              sample_count: 39658
+            Male:
+              accuracy: 0.6288
+              f1: 0.7252
+              escalation_rate: 46.23
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.2864
+              f1: 0.4288
+              escalation_rate: 23.27
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.6833
+              f1: 0.799
+              escalation_rate: 52.21
+              sample_count: 110109
+            senior:
+              accuracy: 0.0439
+              f1: 0.0841
+              escalation_rate: 4.39
+              sample_count: 5397
       0.7:
-        accuracy: 0.9361
-        precision: 0.9373
-        recall: 0.9361
-        f1: 0.936
-        escalation_rate: 64.26
+        metrics:
+          accuracy: 0.6155
+          precision: 0.967
+          recall: 0.6155
+          f1: 0.7417
+          escalation_rate: 50.3
+        fairness:
+          overall:
+            accuracy: 0.6155
+            f1: 0.7417
+            escalation_rate: 50.3
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.4815
+              f1: 0.6355
+              escalation_rate: 45.67
+              sample_count: 39658
+            Male:
+              accuracy: 0.6638
+              f1: 0.758
+              escalation_rate: 51.97
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.3382
+              f1: 0.493
+              escalation_rate: 29.11
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.729
+              f1: 0.8317
+              escalation_rate: 59.07
+              sample_count: 110109
+            senior:
+              accuracy: 0.0561
+              f1: 0.1063
+              escalation_rate: 5.61
+              sample_count: 5397
       0.75:
-        accuracy: 0.9535
-        precision: 0.9542
-        recall: 0.9535
-        f1: 0.9535
-        escalation_rate: 68.56
+        metrics:
+          accuracy: 0.6582
+          precision: 0.9737
+          recall: 0.6582
+          f1: 0.7769
+          escalation_rate: 56.48
+        fairness:
+          overall:
+            accuracy: 0.6582
+            f1: 0.7769
+            escalation_rate: 56.48
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.5566
+              f1: 0.7042
+              escalation_rate: 53.96
+              sample_count: 39658
+            Male:
+              accuracy: 0.6948
+              f1: 0.787
+              escalation_rate: 57.39
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.392
+              f1: 0.554
+              escalation_rate: 35.24
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.7696
+              f1: 0.8597
+              escalation_rate: 65.5
+              sample_count: 110109
+            senior:
+              accuracy: 0.0712
+              f1: 0.1328
+              escalation_rate: 7.12
+              sample_count: 5397
       0.8:
-        accuracy: 0.9687
-        precision: 0.969
-        recall: 0.9687
-        f1: 0.9687
-        escalation_rate: 72.59
+        metrics:
+          accuracy: 0.7022
+          precision: 0.9801
+          recall: 0.7022
+          f1: 0.8117
+          escalation_rate: 62.97
+        fairness:
+          overall:
+            accuracy: 0.7022
+            f1: 0.8117
+            escalation_rate: 62.97
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.6345
+              f1: 0.7685
+              escalation_rate: 62.34
+              sample_count: 39658
+            Male:
+              accuracy: 0.7266
+              f1: 0.816
+              escalation_rate: 63.2
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.4526
+              f1: 0.617
+              escalation_rate: 42.06
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.8096
+              f1: 0.8864
+              escalation_rate: 72.09
+              sample_count: 110109
+            senior:
+              accuracy: 0.0934
+              f1: 0.1708
+              escalation_rate: 9.34
+              sample_count: 5397
       0.85:
-        accuracy: 0.9841
-        precision: 0.9842
-        recall: 0.9841
-        f1: 0.9841
-        escalation_rate: 78.04
+        metrics:
+          accuracy: 0.7465
+          precision: 0.9866
+          recall: 0.7465
+          f1: 0.8451
+          escalation_rate: 69.81
+        fairness:
+          overall:
+            accuracy: 0.7465
+            f1: 0.8451
+            escalation_rate: 69.81
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.7131
+              f1: 0.8276
+              escalation_rate: 70.78
+              sample_count: 39658
+            Male:
+              accuracy: 0.7585
+              f1: 0.844
+              escalation_rate: 69.46
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.5115
+              f1: 0.6731
+              escalation_rate: 48.95
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.8499
+              f1: 0.9127
+              escalation_rate: 79.09
+              sample_count: 110109
+            senior:
+              accuracy: 0.1251
+              f1: 0.2223
+              escalation_rate: 12.51
+              sample_count: 5397
       0.9:
-        accuracy: 0.9932
-        precision: 0.9932
-        recall: 0.9932
-        f1: 0.9932
-        escalation_rate: 83.5
+        metrics:
+          accuracy: 0.7918
+          precision: 0.993
+          recall: 0.7918
+          f1: 0.8778
+          escalation_rate: 76.74
+        fairness:
+          overall:
+            accuracy: 0.7918
+            f1: 0.8778
+            escalation_rate: 76.74
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.791
+              f1: 0.8806
+              escalation_rate: 78.91
+              sample_count: 39658
+            Male:
+              accuracy: 0.7921
+              f1: 0.8722
+              escalation_rate: 75.96
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.5767
+              f1: 0.73
+              escalation_rate: 56.5
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.8892
+              f1: 0.9377
+              escalation_rate: 85.97
+              sample_count: 110109
+            senior:
+              accuracy: 0.1673
+              f1: 0.2867
+              escalation_rate: 16.73
+              sample_count: 5397
       0.95:
-        accuracy: 0.9981
-        precision: 0.9981
-        recall: 0.9981
-        f1: 0.9981
-        escalation_rate: 89.0
+        metrics:
+          accuracy: 0.8381
+          precision: 0.9987
+          recall: 0.8381
+          f1: 0.9095
+          escalation_rate: 83.36
+        fairness:
+          overall:
+            accuracy: 0.8381
+            f1: 0.9095
+            escalation_rate: 83.36
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.8593
+              f1: 0.9232
+              escalation_rate: 85.93
+              sample_count: 39658
+            Male:
+              accuracy: 0.8305
+              f1: 0.902
+              escalation_rate: 82.44
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.6507
+              f1: 0.7878
+              escalation_rate: 64.89
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.9264
+              f1: 0.961
+              escalation_rate: 92.08
+              sample_count: 110109
+            senior:
+              accuracy: 0.2251
+              f1: 0.3675
+              escalation_rate: 22.51
+              sample_count: 5397
       1.0:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 99.17
-nmt_vgg16_binary:
-  model: vgg16
-  mode: binary
-  num_classes: 2
-  sweeps:
-    confidence_threshold:
-      0.0:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        metrics:
+          accuracy: 0.9843
+          precision: 1.0
+          recall: 0.9843
+          f1: 0.9921
+          escalation_rate: 98.43
+        fairness:
+          overall:
+            accuracy: 0.9843
+            f1: 0.9921
+            escalation_rate: 98.43
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.9936
+              f1: 0.9968
+              escalation_rate: 99.36
+              sample_count: 39658
+            Male:
+              accuracy: 0.981
+              f1: 0.9904
+              escalation_rate: 98.1
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.959
+              f1: 0.9781
+              escalation_rate: 95.9
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.9935
+              f1: 0.9967
+              escalation_rate: 99.35
+              sample_count: 110109
+            senior:
+              accuracy: 0.9572
+              f1: 0.9781
+              escalation_rate: 95.72
+              sample_count: 5397
+  baseline_fairness:
+    overall:
+      accuracy: 0.2199
+      f1: 0.3213
+      escalation_rate: 0.0
+      sample_count: 149697
+    by_gender:
+      Female:
+        accuracy: 0.1038
+        f1: 0.1815
         escalation_rate: 0.0
-      0.05:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        sample_count: 39658
+      Male:
+        accuracy: 0.2618
+        f1: 0.3569
         escalation_rate: 0.0
-      0.1:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        sample_count: 110039
+    by_age_group:
+      adult:
+        accuracy: 0.0876
+        f1: 0.1217
         escalation_rate: 0.0
-      0.15:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        sample_count: 34191
+      pediatric:
+        accuracy: 0.2715
+        f1: 0.3911
         escalation_rate: 0.0
-      0.2:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
+        sample_count: 110109
+      senior:
+        accuracy: 0.005
+        f1: 0.01
         escalation_rate: 0.0
-      0.25:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.3:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.35:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.4:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.45:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.5:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.55:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.6:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.65:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.7:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.75:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.8:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.85:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.9:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      0.95:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
-      1.0:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 0.0
+        sample_count: 5397
 nmt_vgg16_three_class:
   model: vgg16
   mode: three
@@ -665,128 +1763,875 @@ nmt_vgg16_three_class:
   sweeps:
     confidence_threshold:
       0.0:
-        accuracy: 0.6108
-        precision: 0.6191
-        recall: 0.6108
-        f1: 0.6103
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2625
+          precision: 0.6053
+          recall: 0.2625
+          f1: 0.3621
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2625
+            f1: 0.3621
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1735
+              f1: 0.2618
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2946
+              f1: 0.3853
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1418
+              f1: 0.2051
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3125
+              f1: 0.4182
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0067
+              f1: 0.0133
+              escalation_rate: 0.0
+              sample_count: 5397
       0.05:
-        accuracy: 0.6108
-        precision: 0.6191
-        recall: 0.6108
-        f1: 0.6103
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2625
+          precision: 0.6053
+          recall: 0.2625
+          f1: 0.3621
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2625
+            f1: 0.3621
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1735
+              f1: 0.2618
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2946
+              f1: 0.3853
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1418
+              f1: 0.2051
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3125
+              f1: 0.4182
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0067
+              f1: 0.0133
+              escalation_rate: 0.0
+              sample_count: 5397
       0.1:
-        accuracy: 0.6108
-        precision: 0.6191
-        recall: 0.6108
-        f1: 0.6103
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2625
+          precision: 0.6053
+          recall: 0.2625
+          f1: 0.3621
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2625
+            f1: 0.3621
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1735
+              f1: 0.2618
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2946
+              f1: 0.3853
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1418
+              f1: 0.2051
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3125
+              f1: 0.4182
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0067
+              f1: 0.0133
+              escalation_rate: 0.0
+              sample_count: 5397
       0.15:
-        accuracy: 0.6108
-        precision: 0.6191
-        recall: 0.6108
-        f1: 0.6103
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2625
+          precision: 0.6053
+          recall: 0.2625
+          f1: 0.3621
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2625
+            f1: 0.3621
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1735
+              f1: 0.2618
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2946
+              f1: 0.3853
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1418
+              f1: 0.2051
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3125
+              f1: 0.4182
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0067
+              f1: 0.0133
+              escalation_rate: 0.0
+              sample_count: 5397
       0.2:
-        accuracy: 0.6108
-        precision: 0.6191
-        recall: 0.6108
-        f1: 0.6103
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2625
+          precision: 0.6053
+          recall: 0.2625
+          f1: 0.3621
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2625
+            f1: 0.3621
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1735
+              f1: 0.2618
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2946
+              f1: 0.3853
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1418
+              f1: 0.2051
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3125
+              f1: 0.4182
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0067
+              f1: 0.0133
+              escalation_rate: 0.0
+              sample_count: 5397
       0.25:
-        accuracy: 0.6108
-        precision: 0.6191
-        recall: 0.6108
-        f1: 0.6103
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2625
+          precision: 0.6053
+          recall: 0.2625
+          f1: 0.3621
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2625
+            f1: 0.3621
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1735
+              f1: 0.2618
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2946
+              f1: 0.3853
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1418
+              f1: 0.2051
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3125
+              f1: 0.4182
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0067
+              f1: 0.0133
+              escalation_rate: 0.0
+              sample_count: 5397
       0.3:
-        accuracy: 0.6108
-        precision: 0.6191
-        recall: 0.6108
-        f1: 0.6103
-        escalation_rate: 0.0
+        metrics:
+          accuracy: 0.2625
+          precision: 0.6053
+          recall: 0.2625
+          f1: 0.3621
+          escalation_rate: 0.0
+        fairness:
+          overall:
+            accuracy: 0.2625
+            f1: 0.3621
+            escalation_rate: 0.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1735
+              f1: 0.2618
+              escalation_rate: 0.0
+              sample_count: 39658
+            Male:
+              accuracy: 0.2946
+              f1: 0.3853
+              escalation_rate: 0.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1418
+              f1: 0.2051
+              escalation_rate: 0.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3125
+              f1: 0.4182
+              escalation_rate: 0.0
+              sample_count: 110109
+            senior:
+              accuracy: 0.0067
+              f1: 0.0133
+              escalation_rate: 0.0
+              sample_count: 5397
       0.35:
-        accuracy: 0.6117
-        precision: 0.6199
-        recall: 0.6117
-        f1: 0.6112
-        escalation_rate: 0.19
+        metrics:
+          accuracy: 0.2655
+          precision: 0.6084
+          recall: 0.2655
+          f1: 0.3656
+          escalation_rate: 0.4
+        fairness:
+          overall:
+            accuracy: 0.2655
+            f1: 0.3656
+            escalation_rate: 0.4
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.1767
+              f1: 0.2666
+              escalation_rate: 0.39
+              sample_count: 39658
+            Male:
+              accuracy: 0.2975
+              f1: 0.3885
+              escalation_rate: 0.4
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1441
+              f1: 0.2089
+              escalation_rate: 0.4
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3158
+              f1: 0.4218
+              escalation_rate: 0.42
+              sample_count: 110109
+            senior:
+              accuracy: 0.0072
+              f1: 0.0143
+              escalation_rate: 0.06
+              sample_count: 5397
       0.4:
-        accuracy: 0.6478
-        precision: 0.6537
-        recall: 0.6478
-        f1: 0.647
-        escalation_rate: 6.85
+        metrics:
+          accuracy: 0.3099
+          precision: 0.6471
+          recall: 0.3099
+          f1: 0.416
+          escalation_rate: 6.57
+        fairness:
+          overall:
+            accuracy: 0.3099
+            f1: 0.416
+            escalation_rate: 6.57
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.2353
+              f1: 0.351
+              escalation_rate: 8.17
+              sample_count: 39658
+            Male:
+              accuracy: 0.3368
+              f1: 0.4298
+              escalation_rate: 6.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.1742
+              f1: 0.2557
+              escalation_rate: 5.5
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.3666
+              f1: 0.4759
+              escalation_rate: 7.17
+              sample_count: 110109
+            senior:
+              accuracy: 0.0133
+              f1: 0.0263
+              escalation_rate: 1.17
+              sample_count: 5397
       0.45:
-        accuracy: 0.6937
-        precision: 0.697
-        recall: 0.6937
-        f1: 0.6926
-        escalation_rate: 14.98
+        metrics:
+          accuracy: 0.3722
+          precision: 0.6959
+          recall: 0.3722
+          f1: 0.4833
+          escalation_rate: 14.74
+        fairness:
+          overall:
+            accuracy: 0.3722
+            f1: 0.4833
+            escalation_rate: 14.74
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.3146
+              f1: 0.4527
+              escalation_rate: 18.14
+              sample_count: 39658
+            Male:
+              accuracy: 0.3929
+              f1: 0.4866
+              escalation_rate: 13.52
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.215
+              f1: 0.3158
+              escalation_rate: 11.6
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.4383
+              f1: 0.5479
+              escalation_rate: 16.36
+              sample_count: 110109
+            senior:
+              accuracy: 0.0183
+              f1: 0.036
+              escalation_rate: 1.72
+              sample_count: 5397
       0.5:
-        accuracy: 0.7443
-        precision: 0.7455
-        recall: 0.7443
-        f1: 0.7433
-        escalation_rate: 24.85
+        metrics:
+          accuracy: 0.4587
+          precision: 0.7597
+          recall: 0.4587
+          f1: 0.5719
+          escalation_rate: 25.94
+        fairness:
+          overall:
+            accuracy: 0.4587
+            f1: 0.5719
+            escalation_rate: 25.94
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.417
+              f1: 0.569
+              escalation_rate: 30.89
+              sample_count: 39658
+            Male:
+              accuracy: 0.4737
+              f1: 0.5652
+              escalation_rate: 24.16
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.2689
+              f1: 0.3906
+              escalation_rate: 18.58
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.5388
+              f1: 0.643
+              escalation_rate: 29.37
+              sample_count: 110109
+            senior:
+              accuracy: 0.0261
+              f1: 0.0509
+              escalation_rate: 2.56
+              sample_count: 5397
       0.55:
-        accuracy: 0.8211
-        precision: 0.8211
-        recall: 0.8211
-        f1: 0.8206
-        escalation_rate: 40.34
+        metrics:
+          accuracy: 0.5788
+          precision: 0.859
+          recall: 0.5788
+          f1: 0.6894
+          escalation_rate: 41.56
+        fairness:
+          overall:
+            accuracy: 0.5788
+            f1: 0.6894
+            escalation_rate: 41.56
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.5342
+              f1: 0.683
+              escalation_rate: 46.45
+              sample_count: 39658
+            Male:
+              accuracy: 0.5949
+              f1: 0.681
+              escalation_rate: 39.79
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.3458
+              f1: 0.487
+              escalation_rate: 27.82
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.6777
+              f1: 0.768
+              escalation_rate: 47.67
+              sample_count: 110109
+            senior:
+              accuracy: 0.0384
+              f1: 0.0739
+              escalation_rate: 3.84
+              sample_count: 5397
       0.6:
-        accuracy: 0.9095
-        precision: 0.9127
-        recall: 0.9095
-        f1: 0.9096
-        escalation_rate: 58.51
+        metrics:
+          accuracy: 0.6806
+          precision: 0.9601
+          recall: 0.6806
+          f1: 0.7847
+          escalation_rate: 54.32
+        fairness:
+          overall:
+            accuracy: 0.6806
+            f1: 0.7847
+            escalation_rate: 54.32
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.6385
+              f1: 0.7698
+              escalation_rate: 59.09
+              sample_count: 39658
+            Male:
+              accuracy: 0.6958
+              f1: 0.7778
+              escalation_rate: 52.59
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.4081
+              f1: 0.5582
+              escalation_rate: 35.31
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.796
+              f1: 0.8723
+              escalation_rate: 62.62
+              sample_count: 110109
+            senior:
+              accuracy: 0.0534
+              f1: 0.1013
+              escalation_rate: 5.34
+              sample_count: 5397
       0.65:
-        accuracy: 0.9395
-        precision: 0.9411
-        recall: 0.9395
-        f1: 0.9395
-        escalation_rate: 64.84
+        metrics:
+          accuracy: 0.7283
+          precision: 0.9695
+          recall: 0.7283
+          f1: 0.8224
+          escalation_rate: 61.53
+        fairness:
+          overall:
+            accuracy: 0.7283
+            f1: 0.8224
+            escalation_rate: 61.53
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.7291
+              f1: 0.8365
+              escalation_rate: 69.53
+              sample_count: 39658
+            Male:
+              accuracy: 0.7281
+              f1: 0.8089
+              escalation_rate: 58.64
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.4674
+              f1: 0.6214
+              escalation_rate: 42.39
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.8418
+              f1: 0.9021
+              escalation_rate: 70.16
+              sample_count: 110109
+            senior:
+              accuracy: 0.0667
+              f1: 0.1251
+              escalation_rate: 6.67
+              sample_count: 5397
       0.7:
-        accuracy: 0.9641
-        precision: 0.9648
-        recall: 0.9641
-        f1: 0.9641
-        escalation_rate: 70.77
+        metrics:
+          accuracy: 0.7646
+          precision: 0.9774
+          recall: 0.7646
+          f1: 0.8508
+          escalation_rate: 67.81
+        fairness:
+          overall:
+            accuracy: 0.7646
+            f1: 0.8508
+            escalation_rate: 67.81
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.7886
+              f1: 0.877
+              escalation_rate: 76.65
+              sample_count: 39658
+            Male:
+              accuracy: 0.756
+              f1: 0.835
+              escalation_rate: 64.63
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.5198
+              f1: 0.6733
+              escalation_rate: 48.78
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.874
+              f1: 0.9231
+              escalation_rate: 76.63
+              sample_count: 110109
+            senior:
+              accuracy: 0.0845
+              f1: 0.1558
+              escalation_rate: 8.45
+              sample_count: 5397
       0.75:
-        accuracy: 0.9798
-        precision: 0.9801
-        recall: 0.9798
-        f1: 0.9798
-        escalation_rate: 76.5
+        metrics:
+          accuracy: 0.7939
+          precision: 0.984
+          recall: 0.7939
+          f1: 0.8733
+          escalation_rate: 73.38
+        fairness:
+          overall:
+            accuracy: 0.7939
+            f1: 0.8733
+            escalation_rate: 73.38
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.8298
+              f1: 0.9037
+              escalation_rate: 81.72
+              sample_count: 39658
+            Male:
+              accuracy: 0.781
+              f1: 0.8576
+              escalation_rate: 70.37
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.5696
+              f1: 0.7201
+              escalation_rate: 54.9
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.8973
+              f1: 0.9382
+              escalation_rate: 82.2
+              sample_count: 110109
+            senior:
+              accuracy: 0.1045
+              f1: 0.1892
+              escalation_rate: 10.45
+              sample_count: 5397
       0.8:
-        accuracy: 0.9897
-        precision: 0.9898
-        recall: 0.9897
-        f1: 0.9897
-        escalation_rate: 81.57
+        metrics:
+          accuracy: 0.8183
+          precision: 0.9898
+          recall: 0.8183
+          f1: 0.8919
+          escalation_rate: 78.23
+        fairness:
+          overall:
+            accuracy: 0.8183
+            f1: 0.8919
+            escalation_rate: 78.23
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.8544
+              f1: 0.9192
+              escalation_rate: 84.88
+              sample_count: 39658
+            Male:
+              accuracy: 0.8052
+              f1: 0.8784
+              escalation_rate: 75.83
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.6148
+              f1: 0.7589
+              escalation_rate: 60.36
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.9152
+              f1: 0.9503
+              escalation_rate: 86.97
+              sample_count: 110109
+            senior:
+              accuracy: 0.1295
+              f1: 0.2293
+              escalation_rate: 12.95
+              sample_count: 5397
       0.85:
-        accuracy: 0.9958
-        precision: 0.9958
-        recall: 0.9958
-        f1: 0.9958
-        escalation_rate: 86.16
+        metrics:
+          accuracy: 0.8408
+          precision: 0.9948
+          recall: 0.8408
+          f1: 0.9086
+          escalation_rate: 82.43
+        fairness:
+          overall:
+            accuracy: 0.8408
+            f1: 0.9086
+            escalation_rate: 82.43
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.8736
+              f1: 0.9311
+              escalation_rate: 87.14
+              sample_count: 39658
+            Male:
+              accuracy: 0.829
+              f1: 0.8978
+              escalation_rate: 80.74
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.6569
+              f1: 0.7919
+              escalation_rate: 65.21
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.9308
+              f1: 0.9613
+              escalation_rate: 90.98
+              sample_count: 110109
+            senior:
+              accuracy: 0.1707
+              f1: 0.2915
+              escalation_rate: 17.07
+              sample_count: 5397
       0.9:
-        accuracy: 0.9986
-        precision: 0.9986
-        recall: 0.9986
-        f1: 0.9986
-        escalation_rate: 89.2
+        metrics:
+          accuracy: 0.8638
+          precision: 0.9984
+          recall: 0.8638
+          f1: 0.9244
+          escalation_rate: 85.96
+        fairness:
+          overall:
+            accuracy: 0.8638
+            f1: 0.9244
+            escalation_rate: 85.96
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.8961
+              f1: 0.9445
+              escalation_rate: 89.58
+              sample_count: 39658
+            Male:
+              accuracy: 0.8522
+              f1: 0.9152
+              escalation_rate: 84.65
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.7005
+              f1: 0.8234
+              escalation_rate: 69.95
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.9464
+              f1: 0.9715
+              escalation_rate: 94.09
+              sample_count: 110109
+            senior:
+              accuracy: 0.2146
+              f1: 0.3533
+              escalation_rate: 21.46
+              sample_count: 5397
       0.95:
-        accuracy: 0.9997
-        precision: 0.9997
-        recall: 0.9997
-        f1: 0.9997
-        escalation_rate: 91.48
+        metrics:
+          accuracy: 0.8915
+          precision: 0.9998
+          recall: 0.8915
+          f1: 0.9414
+          escalation_rate: 89.13
+        fairness:
+          overall:
+            accuracy: 0.8915
+            f1: 0.9414
+            escalation_rate: 89.13
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 0.9226
+              f1: 0.9593
+              escalation_rate: 92.26
+              sample_count: 39658
+            Male:
+              accuracy: 0.8803
+              f1: 0.9337
+              escalation_rate: 88.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 0.7618
+              f1: 0.8645
+              escalation_rate: 76.16
+              sample_count: 34191
+            pediatric:
+              accuracy: 0.9616
+              f1: 0.9803
+              escalation_rate: 96.12
+              sample_count: 110109
+            senior:
+              accuracy: 0.2846
+              f1: 0.4431
+              escalation_rate: 28.46
+              sample_count: 5397
       1.0:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 100.0
+        metrics:
+          accuracy: 1.0
+          precision: 1.0
+          recall: 1.0
+          f1: 1.0
+          escalation_rate: 100.0
+        fairness:
+          overall:
+            accuracy: 1.0
+            f1: 1.0
+            escalation_rate: 100.0
+            sample_count: 149697
+          by_gender:
+            Female:
+              accuracy: 1.0
+              f1: 1.0
+              escalation_rate: 100.0
+              sample_count: 39658
+            Male:
+              accuracy: 1.0
+              f1: 1.0
+              escalation_rate: 100.0
+              sample_count: 110039
+          by_age_group:
+            adult:
+              accuracy: 1.0
+              f1: 1.0
+              escalation_rate: 100.0
+              sample_count: 34191
+            pediatric:
+              accuracy: 1.0
+              f1: 1.0
+              escalation_rate: 100.0
+              sample_count: 110109
+            senior:
+              accuracy: 1.0
+              f1: 1.0
+              escalation_rate: 100.0
+              sample_count: 5397
+  baseline_fairness:
+    overall:
+      accuracy: 0.2625
+      f1: 0.3621
+      escalation_rate: 0.0
+      sample_count: 149697
+    by_gender:
+      Female:
+        accuracy: 0.1735
+        f1: 0.2618
+        escalation_rate: 0.0
+        sample_count: 39658
+      Male:
+        accuracy: 0.2946
+        f1: 0.3853
+        escalation_rate: 0.0
+        sample_count: 110039
+    by_age_group:
+      adult:
+        accuracy: 0.1418
+        f1: 0.2051
+        escalation_rate: 0.0
+        sample_count: 34191
+      pediatric:
+        accuracy: 0.3125
+        f1: 0.4182
+        escalation_rate: 0.0
+        sample_count: 110109
+      senior:
+        accuracy: 0.0067
+        f1: 0.0133
+        escalation_rate: 0.0
+        sample_count: 5397
