@@ -974,6 +974,84 @@ strategy_b:
 
 ---
 
+## Budget-Risk Analysis
+
+Script: `budget_risk.py`
+
+Evaluates a risk-based resource allocation approach where human review is allocated to the highest-risk cases.
+
+### How It Works
+
+1. **Calculate Risk**: `risk = P(abnormal) × cost`
+   - P(abnormal) = P(Slowing Waves) + P(Spike/Sharp Waves) = 1 - P(Normal)
+   
+2. **Sort by Risk**: Cases are sorted by risk score (highest first)
+
+3. **Budget Allocation**: For each budget level (10%, 20%, ..., 100%):
+   - Top budget% of highest-risk cases → Human review
+   - Remaining cases → AI prediction
+
+### Usage
+
+```bash
+# Default (10% to 100% in 10% steps, cost=1.0)
+python budget_risk.py
+
+# Custom cost and budget range
+python budget_risk.py --cost 2.0 --budget-step 0.05
+```
+
+### CLI Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--checkpoint-dir` | `checkpoints` | Directory with model checkpoints |
+| `--dataset` | `nmt` | Dataset name |
+| `--output` | `experiments/budget_risk.yaml` | Output file |
+| `--cost` | 1.0 | Cost parameter for risk calculation |
+| `--budget-start` | 0.1 | Budget sweep start |
+| `--budget-end` | 1.0 | Budget sweep end |
+| `--budget-step` | 0.1 | Budget sweep step |
+| `--modes` | three_class | Which modes: binary, three_class, all |
+| `--config-subjects` | True | Use abnormal subjects from config |
+
+### Output
+
+Results saved to `experiments/budget_risk.yaml`:
+
+```yaml
+budget_risk:
+  nmt_resnet18_three_class:
+    model: resnet18
+    mode: three_class
+    num_classes: 3
+    cost_parameter: 1.0
+    baseline_fairness:
+      overall:
+        accuracy: 0.64
+        f1: 0.64
+        escalation_rate: 0.0
+        sample_count: 5985
+      by_gender:
+        Male: {...}
+      by_age_group:
+        pediatric: {...}
+    results:
+      0.1:
+        metrics:
+          accuracy: 0.68
+          f1: 0.66
+          escalation_rate: 10.0
+        fairness:
+          overall: {...}
+          by_gender: {...}
+          by_age_group: {...}
+      0.2:
+        ...
+```
+
+---
+
 ## Key Parameters Summary
 
 | Component | Parameter | Value | Description |
