@@ -6,99 +6,159 @@ strategy_a:
   confidence_threshold: 0.6
   results:
     overall:
-      accuracy: 0.7148
-      precision: 0.7952
-      recall: 0.7148
-      f1: 0.7078
-      escalation_rate: 29.57
-      sample_count: 13045
+      accuracy: 0.3681
+      precision: 0.9238
+      recall: 0.3681
+      f1: 0.5014
+      escalation_rate: 24.39
+      sample_count: 149697
     by_gender:
+      Female:
+        accuracy: 0.1811
+        precision: 0.9055
+        recall: 0.1811
+        f1: 0.3009
+        escalation_rate: 13.03
+        sample_count: 39658
       Male:
-        accuracy: 0.6549
-        precision: 0.9911
-        recall: 0.6549
-        f1: 0.7662
-        escalation_rate: 38.99
-        sample_count: 8859
-      unknown:
-        accuracy: 0.8416
-        precision: 1.0
-        recall: 0.8416
-        f1: 0.914
-        escalation_rate: 9.65
-        sample_count: 4186
+        accuracy: 0.4355
+        precision: 0.919
+        recall: 0.4355
+        f1: 0.5419
+        escalation_rate: 28.48
+        sample_count: 110039
     by_age_group:
+      adult:
+        accuracy: 0.127
+        precision: 0.8928
+        recall: 0.127
+        f1: 0.2081
+        escalation_rate: 8.17
+        sample_count: 34191
       pediatric:
-        accuracy: 0.6549
-        precision: 0.9911
-        recall: 0.6549
-        f1: 0.7662
-        escalation_rate: 38.99
-        sample_count: 8859
-      unknown:
-        accuracy: 0.8416
+        accuracy: 0.4609
+        precision: 0.9326
+        recall: 0.4609
+        f1: 0.6097
+        escalation_rate: 30.6
+        sample_count: 110109
+      senior:
+        accuracy: 0.0028
         precision: 1.0
-        recall: 0.8416
-        f1: 0.914
-        escalation_rate: 9.65
-        sample_count: 4186
+        recall: 0.0028
+        f1: 0.0055
+        escalation_rate: 0.28
+        sample_count: 5397
     debug:
-      total_samples: 13045
+      total_samples: 149697
       unique_genders:
-      - unknown
       - Male
+      - Female
       unique_ages:
-      - -1
+      - 1
+      - 2
       - 3
+      - 4
+      - 5
       - 6
       - 7
+      - 8
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 21
+      - 22
+      - 23
+      - 29
+      - 35
+      - 39
+      - 50
+      - 55
+      - 61
+      - 70
 strategy_b:
   cost_alpha: 0.05
   results:
     overall:
-      accuracy: 0.8572
-      precision: 0.9012
-      recall: 0.8572
-      f1: 0.851
-      escalation_rate: 70.11
-      sample_count: 13045
+      accuracy: 0.6879
+      precision: 1.0
+      recall: 0.6879
+      f1: 0.8088
+      escalation_rate: 68.79
+      sample_count: 149697
     by_gender:
+      Female:
+        accuracy: 0.6482
+        precision: 1.0
+        recall: 0.6482
+        f1: 0.7832
+        escalation_rate: 64.82
+        sample_count: 39658
       Male:
-        accuracy: 0.7897
+        accuracy: 0.7022
         precision: 1.0
-        recall: 0.7897
-        f1: 0.8666
-        escalation_rate: 78.97
-        sample_count: 8859
-      unknown:
-        accuracy: 1.0
-        precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 51.36
-        sample_count: 4186
+        recall: 0.7022
+        f1: 0.8091
+        escalation_rate: 70.22
+        sample_count: 110039
     by_age_group:
+      adult:
+        accuracy: 0.4387
+        precision: 1.0
+        recall: 0.4387
+        f1: 0.6097
+        escalation_rate: 43.87
+        sample_count: 34191
       pediatric:
-        accuracy: 0.7897
+        accuracy: 0.796
         precision: 1.0
-        recall: 0.7897
-        f1: 0.8666
-        escalation_rate: 78.97
-        sample_count: 8859
-      unknown:
-        accuracy: 1.0
+        recall: 0.796
+        f1: 0.8864
+        escalation_rate: 79.6
+        sample_count: 110109
+      senior:
+        accuracy: 0.0611
         precision: 1.0
-        recall: 1.0
-        f1: 1.0
-        escalation_rate: 51.36
-        sample_count: 4186
+        recall: 0.0611
+        f1: 0.1152
+        escalation_rate: 6.11
+        sample_count: 5397
     debug:
-      total_samples: 13045
+      total_samples: 149697
       unique_genders:
-      - unknown
       - Male
+      - Female
       unique_ages:
-      - -1
+      - 1
+      - 2
       - 3
+      - 4
+      - 5
       - 6
       - 7
+      - 8
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 21
+      - 22
+      - 23
+      - 29
+      - 35
+      - 39
+      - 50
+      - 55
+      - 61
+      - 70
