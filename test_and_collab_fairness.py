@@ -300,6 +300,9 @@ def main():
         print("Run generate_metadata.py first to create the metadata file.")
         return
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
+
     # Determine which checkpoints to process
     if args.model and args.mode:
         # Specific checkpoint requested
