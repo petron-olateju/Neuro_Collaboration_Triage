@@ -20,6 +20,7 @@ A PyTorch-based deep learning pipeline for EEG anomaly classification using CWT 
 9. [Models](#models)
 10. [End-to-End Workflow](#end-to-end-workflow)
 11. [Collaboration Analysis](#collaboration-analysis)
+12. [Collaboration Parameter Sweep](#collaboration-parameter-sweep)
 
 ---
 
@@ -148,7 +149,9 @@ EEG_Anomaly_Triage/
 │       ├── valid/
 │       └── test/
 ├── experiments/              # Collaboration analysis results
-│   └── experiment.yaml      # All experiment runs (timestamp-keyed)
+│   ├── experiment.yaml      # Single run results (timestamp-keyed)
+│   ├── confidence_threshold_sweep.yaml  # Sweep results for confidence threshold
+│   └── cost_alpha_sweep.yaml  # Sweep results for cost alpha
 └── artifacts/
     └── source_code_files/   # Original Jupyter notebooks (reference)
 ```
@@ -770,6 +773,66 @@ runs:
 |-----------|---------|-------------|
 | `confidence_threshold` | 0.85 | Strategy A: defer if confidence below this |
 | `cost_alpha` | 0.15 | Strategy B: defer if P(pathology) > this |
+
+---
+
+## Collaboration Parameter Sweep
+
+Script: `test_and_collab_sweep.py`
+
+Performs a grid search over collaboration parameters to find optimal thresholds.
+
+### Usage
+
+```bash
+# Default sweep (0.0 to 1.0, step 0.05)
+python test_and_collab_sweep.py
+
+# Custom sweep ranges
+python test_and_collab_sweep.py --confidence-step 0.1 --cost-step 0.1
+```
+
+### CLI Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--dataset` | `nmt` | Dataset name |
+| `--confidence-start` | 0.0 | Confidence threshold sweep start |
+| `--confidence-end` | 1.0 | Confidence threshold sweep end |
+| `--confidence-step` | 0.05 | Confidence threshold sweep step |
+| `--cost-start` | 0.0 | Cost alpha sweep start |
+| `--cost-end` | 1.0 | Cost alpha sweep end |
+| `--cost-step` | 0.05 | Cost alpha sweep step |
+
+### Output
+
+Two YAML files are generated in `experiments/`:
+
+| File | Description |
+|------|-------------|
+| `confidence_threshold_sweep.yaml` | Results for confidence threshold sweep (21 values) |
+| `cost_alpha_sweep.yaml` | Results for cost alpha sweep (21 values) |
+
+Each file contains metrics (accuracy, precision, recall, f1, escalation_rate) for each parameter value.
+
+```yaml
+# Example structure (confidence_threshold_sweep.yaml)
+nmt_vgg16_binary:
+  model: vgg16
+  mode: binary
+  num_classes: 2
+  sweeps:
+    confidence_threshold:
+      0.0:
+        accuracy: 0.85
+        precision: 0.83
+        recall: 0.87
+        f1: 0.85
+        escalation_rate: 0.0
+      0.05:
+        ...
+      ...
+```
 
 ---
 
