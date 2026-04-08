@@ -1,0 +1,792 @@
+nmt_resnet18_binary:
+  model: resnet18
+  mode: binary
+  num_classes: 2
+  sweeps:
+    cost_alpha:
+      0.0:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 100.0
+      0.05:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.1:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.15:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.2:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.25:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.3:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.35:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.4:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.45:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.5:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.55:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.6:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.65:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.7:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.75:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.8:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.85:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.9:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.95:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      1.0:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+nmt_resnet18_three_class:
+  model: resnet18
+  mode: three
+  num_classes: 3
+  sweeps:
+    cost_alpha:
+      0.0:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 100.0
+      0.05:
+        accuracy: 0.8572
+        precision: 0.9012
+        recall: 0.8572
+        f1: 0.851
+        escalation_rate: 70.11
+      0.1:
+        accuracy: 0.8353
+        precision: 0.8912
+        recall: 0.8353
+        f1: 0.8278
+        escalation_rate: 65.8
+      0.15:
+        accuracy: 0.8216
+        precision: 0.8854
+        recall: 0.8216
+        f1: 0.8133
+        escalation_rate: 63.04
+      0.2:
+        accuracy: 0.8116
+        precision: 0.8813
+        recall: 0.8116
+        f1: 0.8029
+        escalation_rate: 60.69
+      0.25:
+        accuracy: 0.7989
+        precision: 0.8764
+        recall: 0.7989
+        f1: 0.7899
+        escalation_rate: 58.5
+      0.3:
+        accuracy: 0.7878
+        precision: 0.8723
+        recall: 0.7878
+        f1: 0.7787
+        escalation_rate: 56.49
+      0.35:
+        accuracy: 0.7782
+        precision: 0.8689
+        recall: 0.7782
+        f1: 0.7695
+        escalation_rate: 54.75
+      0.4:
+        accuracy: 0.7689
+        precision: 0.8656
+        recall: 0.7689
+        f1: 0.7602
+        escalation_rate: 52.98
+      0.45:
+        accuracy: 0.7563
+        precision: 0.8615
+        recall: 0.7563
+        f1: 0.7479
+        escalation_rate: 51.09
+      0.5:
+        accuracy: 0.744
+        precision: 0.8576
+        recall: 0.744
+        f1: 0.7356
+        escalation_rate: 49.31
+      0.55:
+        accuracy: 0.7317
+        precision: 0.8475
+        recall: 0.7317
+        f1: 0.723
+        escalation_rate: 47.51
+      0.6:
+        accuracy: 0.7213
+        precision: 0.8381
+        recall: 0.7213
+        f1: 0.7123
+        escalation_rate: 45.75
+      0.65:
+        accuracy: 0.7099
+        precision: 0.825
+        recall: 0.7099
+        f1: 0.7003
+        escalation_rate: 43.83
+      0.7:
+        accuracy: 0.6999
+        precision: 0.8073
+        recall: 0.6999
+        f1: 0.6904
+        escalation_rate: 41.51
+      0.75:
+        accuracy: 0.6877
+        precision: 0.7857
+        recall: 0.6877
+        f1: 0.6779
+        escalation_rate: 38.96
+      0.8:
+        accuracy: 0.6763
+        precision: 0.7658
+        recall: 0.6763
+        f1: 0.6662
+        escalation_rate: 36.21
+      0.85:
+        accuracy: 0.6636
+        precision: 0.7434
+        recall: 0.6636
+        f1: 0.6538
+        escalation_rate: 32.67
+      0.9:
+        accuracy: 0.6436
+        precision: 0.7083
+        recall: 0.6436
+        f1: 0.6339
+        escalation_rate: 27.57
+      0.95:
+        accuracy: 0.6182
+        precision: 0.667
+        recall: 0.6182
+        f1: 0.6092
+        escalation_rate: 19.82
+      1.0:
+        accuracy: 0.5589
+        precision: 0.5875
+        recall: 0.5589
+        f1: 0.55
+        escalation_rate: 0.0
+nmt_vgg11_binary:
+  model: vgg11
+  mode: binary
+  num_classes: 2
+  sweeps:
+    cost_alpha:
+      0.0:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.05:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.1:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.15:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.2:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.25:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.3:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.35:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.4:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.45:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.5:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.55:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.6:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.65:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.7:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.75:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.8:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.85:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.9:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.95:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      1.0:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+nmt_vgg11_three_class:
+  model: vgg11
+  mode: three
+  num_classes: 3
+  sweeps:
+    cost_alpha:
+      0.0:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 99.17
+      0.05:
+        accuracy: 0.9985
+        precision: 0.9985
+        recall: 0.9985
+        f1: 0.9985
+        escalation_rate: 89.93
+      0.1:
+        accuracy: 0.9963
+        precision: 0.9964
+        recall: 0.9963
+        f1: 0.9963
+        escalation_rate: 88.26
+      0.15:
+        accuracy: 0.9938
+        precision: 0.9939
+        recall: 0.9938
+        f1: 0.9938
+        escalation_rate: 86.91
+      0.2:
+        accuracy: 0.9887
+        precision: 0.989
+        recall: 0.9887
+        f1: 0.9887
+        escalation_rate: 85.34
+      0.25:
+        accuracy: 0.9837
+        precision: 0.9845
+        recall: 0.9837
+        f1: 0.9838
+        escalation_rate: 83.72
+      0.3:
+        accuracy: 0.9771
+        precision: 0.9786
+        recall: 0.9771
+        f1: 0.9773
+        escalation_rate: 81.82
+      0.35:
+        accuracy: 0.9662
+        precision: 0.9694
+        recall: 0.9662
+        f1: 0.9666
+        escalation_rate: 79.43
+      0.4:
+        accuracy: 0.9474
+        precision: 0.9548
+        recall: 0.9474
+        f1: 0.9483
+        escalation_rate: 76.2
+      0.45:
+        accuracy: 0.9226
+        precision: 0.9376
+        recall: 0.9226
+        f1: 0.9244
+        escalation_rate: 72.34
+      0.5:
+        accuracy: 0.8802
+        precision: 0.9128
+        recall: 0.8802
+        f1: 0.8836
+        escalation_rate: 66.91
+      0.55:
+        accuracy: 0.8285
+        precision: 0.8813
+        recall: 0.8285
+        f1: 0.8328
+        escalation_rate: 60.9
+      0.6:
+        accuracy: 0.7697
+        precision: 0.8435
+        recall: 0.7697
+        f1: 0.7724
+        escalation_rate: 53.93
+      0.65:
+        accuracy: 0.7138
+        precision: 0.8052
+        recall: 0.7138
+        f1: 0.7126
+        escalation_rate: 46.9
+      0.7:
+        accuracy: 0.6905
+        precision: 0.7705
+        recall: 0.6905
+        f1: 0.6891
+        escalation_rate: 41.26
+      0.75:
+        accuracy: 0.6626
+        precision: 0.7248
+        recall: 0.6626
+        f1: 0.6614
+        escalation_rate: 35.01
+      0.8:
+        accuracy: 0.6397
+        precision: 0.6903
+        recall: 0.6397
+        f1: 0.639
+        escalation_rate: 30.03
+      0.85:
+        accuracy: 0.618
+        precision: 0.6598
+        recall: 0.618
+        f1: 0.6178
+        escalation_rate: 23.57
+      0.9:
+        accuracy: 0.591
+        precision: 0.6224
+        recall: 0.591
+        f1: 0.5908
+        escalation_rate: 14.86
+      0.95:
+        accuracy: 0.5566
+        precision: 0.5788
+        recall: 0.5566
+        f1: 0.5554
+        escalation_rate: 4.06
+      1.0:
+        accuracy: 0.5418
+        precision: 0.5615
+        recall: 0.5418
+        f1: 0.5396
+        escalation_rate: 0.0
+nmt_vgg16_binary:
+  model: vgg16
+  mode: binary
+  num_classes: 2
+  sweeps:
+    cost_alpha:
+      0.0:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.05:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.1:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.15:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.2:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.25:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.3:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.35:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.4:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.45:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.5:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.55:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.6:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.65:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.7:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.75:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.8:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.85:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.9:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      0.95:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      1.0:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+nmt_vgg16_three_class:
+  model: vgg16
+  mode: three
+  num_classes: 3
+  sweeps:
+    cost_alpha:
+      0.0:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 100.0
+      0.05:
+        accuracy: 0.9997
+        precision: 0.9997
+        recall: 0.9997
+        f1: 0.9997
+        escalation_rate: 91.48
+      0.1:
+        accuracy: 0.9994
+        precision: 0.9994
+        recall: 0.9994
+        f1: 0.9994
+        escalation_rate: 89.58
+      0.15:
+        accuracy: 0.9988
+        precision: 0.9988
+        recall: 0.9988
+        f1: 0.9988
+        escalation_rate: 88.3
+      0.2:
+        accuracy: 0.9969
+        precision: 0.9969
+        recall: 0.9969
+        f1: 0.9969
+        escalation_rate: 87.1
+      0.25:
+        accuracy: 0.9943
+        precision: 0.9944
+        recall: 0.9943
+        f1: 0.9943
+        escalation_rate: 85.93
+      0.3:
+        accuracy: 0.9881
+        precision: 0.9885
+        recall: 0.9881
+        f1: 0.9882
+        escalation_rate: 84.35
+      0.35:
+        accuracy: 0.977
+        precision: 0.9785
+        recall: 0.977
+        f1: 0.9772
+        escalation_rate: 82.05
+      0.4:
+        accuracy: 0.9621
+        precision: 0.9661
+        recall: 0.9621
+        f1: 0.9626
+        escalation_rate: 79.49
+      0.45:
+        accuracy: 0.946
+        precision: 0.9537
+        recall: 0.946
+        f1: 0.9468
+        escalation_rate: 76.58
+      0.5:
+        accuracy: 0.9229
+        precision: 0.9378
+        recall: 0.9229
+        f1: 0.9242
+        escalation_rate: 72.66
+      0.55:
+        accuracy: 0.8934
+        precision: 0.9134
+        recall: 0.8934
+        f1: 0.895
+        escalation_rate: 68.49
+      0.6:
+        accuracy: 0.8548
+        precision: 0.8812
+        recall: 0.8548
+        f1: 0.8564
+        escalation_rate: 63.59
+      0.65:
+        accuracy: 0.8136
+        precision: 0.847
+        recall: 0.8136
+        f1: 0.8151
+        escalation_rate: 56.55
+      0.7:
+        accuracy: 0.7898
+        precision: 0.8179
+        recall: 0.7898
+        f1: 0.7912
+        escalation_rate: 49.21
+      0.75:
+        accuracy: 0.7654
+        precision: 0.7862
+        recall: 0.7654
+        f1: 0.7666
+        escalation_rate: 41.1
+      0.8:
+        accuracy: 0.7415
+        precision: 0.7552
+        recall: 0.7415
+        f1: 0.7424
+        escalation_rate: 33.08
+      0.85:
+        accuracy: 0.7198
+        precision: 0.7281
+        recall: 0.7198
+        f1: 0.7206
+        escalation_rate: 25.63
+      0.9:
+        accuracy: 0.6995
+        precision: 0.7045
+        recall: 0.6995
+        f1: 0.7004
+        escalation_rate: 19.65
+      0.95:
+        accuracy: 0.6691
+        precision: 0.6728
+        recall: 0.6691
+        f1: 0.6702
+        escalation_rate: 12.41
+      1.0:
+        accuracy: 0.6108
+        precision: 0.6191
+        recall: 0.6108
+        f1: 0.6103
+        escalation_rate: 0.0

@@ -1,0 +1,175 @@
+runs:
+  2026-04-07_23-56-15:
+    model:
+      name: resnet18
+      dataset: nmt
+      mode: binary
+      num_classes: 2
+    collaboration:
+      strategy_a:
+        confidence_threshold: 0.9
+      strategy_b:
+        cost_alpha: 0.1
+    results:
+      baseline:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+      strategy_a:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      strategy_b:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+  2026-04-07_23-56-50:
+    model:
+      name: vgg11
+      dataset: nmt
+      mode: three
+      num_classes: 3
+    collaboration:
+      strategy_a:
+        confidence_threshold: 0.9
+      strategy_b:
+        cost_alpha: 0.1
+    results:
+      baseline:
+        accuracy: 0.5418
+        precision: 0.5615
+        recall: 0.5418
+        f1: 0.5396
+      strategy_a:
+        accuracy: 0.9932
+        precision: 0.9932
+        recall: 0.9932
+        f1: 0.9932
+        escalation_rate: 83.5
+      strategy_b:
+        accuracy: 0.9963
+        precision: 0.9964
+        recall: 0.9963
+        f1: 0.9963
+        escalation_rate: 88.26
+  2026-04-07_23-57-50:
+    model:
+      name: vgg16
+      dataset: nmt
+      mode: three
+      num_classes: 3
+    collaboration:
+      strategy_a:
+        confidence_threshold: 0.9
+      strategy_b:
+        cost_alpha: 0.1
+    results:
+      baseline:
+        accuracy: 0.6108
+        precision: 0.6191
+        recall: 0.6108
+        f1: 0.6103
+      strategy_a:
+        accuracy: 0.9986
+        precision: 0.9986
+        recall: 0.9986
+        f1: 0.9986
+        escalation_rate: 89.2
+      strategy_b:
+        accuracy: 0.9994
+        precision: 0.9994
+        recall: 0.9994
+        f1: 0.9994
+        escalation_rate: 89.58
+  2026-04-07_23-58-04:
+    model:
+      name: vgg11
+      dataset: nmt
+      mode: binary
+      num_classes: 2
+    collaboration:
+      strategy_a:
+        confidence_threshold: 0.9
+      strategy_b:
+        cost_alpha: 0.1
+    results:
+      baseline:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+      strategy_a:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      strategy_b:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+  2026-04-07_23-58-25:
+    model:
+      name: vgg16
+      dataset: nmt
+      mode: binary
+      num_classes: 2
+    collaboration:
+      strategy_a:
+        confidence_threshold: 0.9
+      strategy_b:
+        cost_alpha: 0.1
+    results:
+      baseline:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+      strategy_a:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+      strategy_b:
+        accuracy: 1.0
+        precision: 1.0
+        recall: 1.0
+        f1: 1.0
+        escalation_rate: 0.0
+  2026-04-07_23-58-44:
+    model:
+      name: resnet18
+      dataset: nmt
+      mode: three
+      num_classes: 3
+    collaboration:
+      strategy_a:
+        confidence_threshold: 0.9
+      strategy_b:
+        cost_alpha: 0.1
+    results:
+      baseline:
+        accuracy: 0.5589
+        precision: 0.5875
+        recall: 0.5589
+        f1: 0.55
+      strategy_a:
+        accuracy: 0.8209
+        precision: 0.8733
+        recall: 0.8209
+        f1: 0.8136
+        escalation_rate: 53.56
+      strategy_b:
+        accuracy: 0.8353
+        precision: 0.8912
+        recall: 0.8353
+        f1: 0.8278
+        escalation_rate: 65.8
