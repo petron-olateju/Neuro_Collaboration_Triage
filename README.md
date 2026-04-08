@@ -1124,6 +1124,82 @@ budget_risk_sweep:
 
 ---
 
+## Transparency Analysis
+
+Script: `run_transparency.py`
+
+Generates interpretability heatmaps showing which time-frequency regions contribute to AI uncertainty for abnormal samples.
+
+### How It Works
+
+1. **Identify uncertain samples**: Filter test samples where AI confidence < threshold
+2. **Compute attributions**: For each uncertain sample, calculate:
+   - **Class Difference** (Abnormal - Normal): Regions associated with abnormal patterns
+   - **Uncertainty**: Regions where model is confused
+3. **Generate heatmaps**: Visual overlays showing high-risk areas
+
+### Attribution Methods
+
+| Method | What It Shows | Clinical Use |
+|--------|---------------|---------------|
+| **class_diff** | Regions pushing toward abnormal classification | "Look here for spikes/slowing" |
+| **uncertainty** | Regions model is confused about | "Model unsure about this area" |
+| **both** | Side-by-side comparison | Compare both perspectives |
+
+### Usage
+
+```bash
+# Default settings (15 samples, confidence < 0.5)
+python run_transparency.py --checkpoint checkpoints/nmt_resnet18_three_class_best.pt
+
+# Custom settings
+python run_transparency.py \
+    --checkpoint checkpoints/nmt_resnet18_three_class_best.pt \
+    --confidence 0.6 \
+    --num-samples 20 \
+    --methods both
+```
+
+### CLI Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--checkpoint` | Required | Path to model checkpoint |
+| `--checkpoint-dir` | `checkpoints` | Directory for auto-discovery |
+| `--confidence` | 0.5 | Uncertainty threshold |
+| `--num-samples` | 15 | Heatmaps to generate |
+| `--methods` | both | class_diff, uncertainty, or both |
+| `--output` | `experiments/transparency/` | Output directory |
+| `--mode` | three_class | Model mode |
+| `--modes` | three_class | Which modes to process |
+| `--config-subjects` | True | Use config-based test subjects |
+
+### Output Structure
+
+```
+experiments/transparency/
+├── nmt_resnet18_three_class/
+│   ├── class_difference/
+│   │   ├── sample_001_uncertain.png
+│   │   └── ...
+│   ├── uncertainty/
+│   │   ├── sample_001_uncertain.png
+│   │   └── ...
+│   ├── comparison/
+│   │   ├── sample_001_both.png
+│   │   └── ...
+│   └── metadata.json
+```
+
+### Sample Metadata
+
+Each run saves metadata.json with:
+- Confidence threshold used
+- Number of samples processed
+- Per-sample info: index, true_label, prediction, confidence, subject_id, gender, age
+
+---
+
 ## Key Parameters Summary
 
 | Component | Parameter | Value | Description |
